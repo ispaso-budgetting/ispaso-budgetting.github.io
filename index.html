@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<head>
+    <title>Principia Budgeting Tool | ISPASO</title>
+    <link rel='stylesheet' href='income_form.css'></link>
+    <script src="https://unpkg.com/vue@3"></script>
+    <script src='https://unpkg.com/vuex@4.0.0/dist/vuex.global.js'></script>
+</head>
+
+<body>
+    <div id='app'>
+        <form>
+            <fieldset>
+                <legend>Income</legend>
+                <label>Financial Aid: <input type = 'number' v-model='finAid' placeholder = '$xx,xxx.xx' /></label>
+
+                <fieldset>
+                    <legend>Student Employment</legend>
+                    <label>Projected Weekly Hours
+                        <input type='number' placeholder='20' v-model='wkHours'/>
+                        Projected weekly earnings: ${{wkEarnings}} <span>(Income tax subtracted: {{ incomeTax }}%)</span>
+                    </label>
+                    <a @click='showIncomeTaxInput = !showIncomeTaxInput'>Edit</a>
+                    <label v-if='showIncomeTaxInput'>Income Tax: <input type='number' v-model='incomeTax' /></label>
+                </fieldset>
+                <p v-if='pIncome'>Projected Income at the End of Semester = <span>${{ pIncome }}</span></p>
+            </fieldset>
+
+            <fieldset>
+                <legend>Expenditure</legend>
+                </p>For now, we're going to focus on your PrinBill. You can add other expenditures later. This section is to calculate your PrinBill</p>
+
+                <p>Running Total = ${{ totalExpenditure }}</p>
+                <label>When do you expect to graduate?</label>
+                <select v-model='gradMonth'>
+                    <option value='7' selected>August</option>
+                    <option value='11'>December</option>
+                </select>
+                <select v-model='gradYear'>
+                    <option v-for='year in gradYears'>{{ year }}</option>
+                </select>
+
+                <fieldset>
+                    <legend>Tax</legend>
+                    <label>
+                        Have you been in the US for at least 5 years?
+
+                        <label><input type='radio' value=1 v-model='isResident' />Yes</label>
+                        <label><input type='radio' value=0 v-model='isResident' />No</label>
+                    </label>
+
+                    <div v-if='isResident == 0'>
+                        <label>Country of Citizenship</label>
+                        <select v-model='cocz'>
+                            <option v-for='country in countries' :value='country.code'>{{ country.name }}</option>
+                        </select>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Insurance</legend>
+                    <label>Did you waive your insurance?</label>
+                    <label><input type='radio' value=1 v-model='waivedInsurance' />Yes</label>
+                    <label><input type='radio' value=0 v-model='waivedInsurance' />No</label>
+
+                    <p>Age</p>
+                    <label>Date of Birth
+                        <input type='date'>
+                    </label>
+                    <label>I don't want to enter my date of birth <input type='checkbox' v-model='noDOB' /></label>
+
+                    <div v-if='noDOB'>
+                        <p>Choose the bracket you fall in.</p>
+                        <label><input type='radio' name='ageBracket' /> Under 25</label>
+                        <label><input type='radio' name='ageBracket' /> 25 - 29</label>
+                        <label><input type='radio' name='ageBracket' /> 30+</label>
+                    </div>
+                </fieldset>
+
+                <p>In total, you will be paying ${{ netExpenses }}</p>
+            </fieldset>
+        </form>
+    </div>
+
+    <script type='module'>
+        // cocz = city of citenzenship
+        import { calcPrinbill, totalExpenditure } from './prinCharges.js';
+        import countries from './countries.js';
+        import store from './store.js';
+
+        const app = Vue.createApp({
+            data() {
+                return {
+                    finAid: null,
+                    showIncomeTaxInput: false,
+                    incomeTax: 30,
+                    wkHours: null,
+                    gradYears: [],
+                    gradMonth: null,
+                    gradYear: null,
+                    waivedInsurance: null,
+                    isResident: null,
+                    cocz: null,
+                    countries: countries,
+                    age: null,
+                    noDOB: false
+                }
+            },
+
+            computed: {
+                gradDate: function() {
+                    return {
+                        month: this.gradMonth,
+                        year: this.gradYear
+                    }
+                },
+                totalExpenditure: function() {
+                    const insurance = {
+                        waived: this.waivedInsurance,
+                        isResident: this.isResident,
+                        cocz: this.cocz
+                    }
+
+                    return totalExpenditure(this.gradDate, insurance, this.age);
+                },
+                prinBill: function() {
+                    const insurance = {
+                        waived: this.waivedInsurance,
+                        isResident: this.isREsident,
+                        cocz: this.cocz
+                    }
+
+                    return calulatePrinbill(this.gradDate, insurance, age)
+                },
+                netExpenses: function() {
+                    let net = this.totalExpenditure - this.finAid;
+                    return net;
+                },
+                pIncome() {
+                    const wkEarnings = this.wkEarnings;
+
+                    if(wkEarnings)
+                        return wkEarnings * 15
+                    else
+                        return null
+                },
+                wkEarnings() {
+                    const wkHours = this.wkHours
+                    if(wkHours) 
+                        return (wkHours * 12.5) * (100 - this.incomeTax)/100
+                    else return null
+                }
+            },
+            mounted() {
+                const currentYear = new Date().getFullYear()
+                this.gradYear = currentYear + 1;
+                this.gradMonth = 7
+
+                const gradYears = []
+                
+                for (let i=0; i <= 10; i++) {
+                    gradYears.push(currentYear + i)
+                }
+                this.gradYears = gradYears
+            }
+        });
+
+        app.use(store);
+        app.mount('#app');
+    </script>
+</body>
+</html>
+
