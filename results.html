@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<head>
+    <title>Results - Principia Budgeting Tool | ISPASO</title>
+    <link rel='stylesheet' href='income_form.css'></link>
+    <script src="vue3.global.js"></script>
+    <script src='vuex4.js'></script>
+</head>
+
+<body>
+    <div id='app'>
+        <table>
+            <thead>
+                <td>Income</td>
+            </thead>
+            <tbody>
+                <td v-for='data in income'>{{ data.name }}</td>
+            </tbody>
+
+            <thead>
+                <td>Expenditure</td>
+            </thead>
+            <tbody>
+                <td v-for='data in income'>{{ data.name }}</td>
+            </tbody>
+        </table>
+    </div>
+
+    <script type='module'>
+        import store from './store.js';
+
+        const app = Vue.createApp({
+            data() {
+                return {
+                    income: [],
+                    expenditure: []
+                }
+            },
+
+            mounted() {
+            }
+        });
+
+        app.use(store);
+        app.mount('#app');
+    </script>
+</body>
+</html>
+
