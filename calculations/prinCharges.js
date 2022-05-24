@@ -7,7 +7,7 @@
 // courses with fees
 // insurance: countries with tax treaties, age brackets
 // programmes that sponsor students during breaks
-import store from './store.js';
+import store from '../store.js';
 
 console.log('store:', store);
 
