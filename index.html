@@ -8,7 +8,10 @@
 
 <body>
     <div id='app'>
-        <form>
+        <h1>Prinbill Budgeting Tool</h1>
+        <p>By ISPASO</p>
+
+        <form @submit.prevent='save(1)'>
             <fieldset>
                 <legend>Income</legend>
                 <label>Financial Aid: <input type = 'number' v-model='finAid' placeholder = '$xx,xxx.xx' /></label>
@@ -64,7 +67,7 @@
 
                     <p>Age</p>
                     <label>Date of Birth
-                        <input type='date'>
+                        <input type='date' :max='maxDOB'>
                     </label>
                     <label>I don't want to enter my date of birth <input type='checkbox' v-model='noDOB' /></label>
 
@@ -77,6 +80,8 @@
                 </fieldset>
 
                 <p>In total, you will be paying ${{ netExpenses }}</p>
+
+                <input type='submit' value='Next' />
             </fieldset>
         </form>
     </div>
@@ -102,7 +107,18 @@
                     cocz: null,
                     countries: countries,
                     age: null,
-                    noDOB: false
+                    noDOB: 'notset',
+                    maxDOB: null
+                }
+            },
+
+            methods: {
+                save(level) {
+                    store.commit('finAid', this.finAid);
+                    store.commit('gradDate', this.gradDate);
+
+                    store.dispatch('save');
+                    return false;
                 }
             },
 
@@ -151,7 +167,12 @@
                 }
             },
             mounted() {
-                const currentYear = new Date().getFullYear()
+                store.dispatch('loadState');
+                const now = new Date();
+                const currentYear = now.getFullYear()
+
+                this.maxDOB = new Date(new Date().setYear(currentYear - 15)).toISOString().split('T')[0];
+
                 this.gradYear = currentYear + 1;
                 this.gradMonth = 7
 
