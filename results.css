@@ -1,0 +1,9 @@
+table {
+    border-collapse: collapse;
+}
+table thead th {
+    column-span: 2;
+}
+table td {
+    border: 1px solid black;
+}
