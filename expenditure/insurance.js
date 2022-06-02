@@ -17,24 +17,15 @@ function calcAgeBracket(birthdate) {
     else return null
 }
 
-export function monthly(birthdate) {
-    console.log('birthdate:', birthdate);
-    let ageBracket
-    if(['a', 'b', 'c'].includes(birthdate))
-        ageBracket = birthdate;
-    else ageBracket = calcAgeBracket(birthdate);
+export default function(birthdate, ageBracket, months) {
+    // if(['a', 'b', 'c'].includes(birthdate))
+        // ageBracket = birthdate;
+    if(!ageBracket)
+        ageBracket = calcAgeBracket(birthdate);
 
-    console.log('ageBracket:', ageBracket);
-        
-    if(ageBracket == 'a')
-        return 62;
-    else if(ageBracket == 'b')
-        return 120;
-    else if(ageBracket == 'c')
-        return 248;
-    else return null;
-}
+    let monthlyPremium = (ageBracket == 'a') ? 62
+    : (ageBracket == 'b') ? 120 : 
+        (ageBracket == 'c') ? 248 : null;
 
-export function yearly(ageBracket) {
-    return monthly(ageBracket) * 12;
+    return monthlyPremium * months;
 }

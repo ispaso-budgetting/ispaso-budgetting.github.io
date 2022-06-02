@@ -11,64 +11,66 @@
     <div id='app'>
         <table>
             <thead>
-                <th>Income</th>
+                <tr>
+                    <th></th>
+                    <th>Expenses</th>
+                    <th>Income</th>
+                </tr>
             </thead>
             <tbody>
-                <template v-for='data in income'>
+            <!-- <tr v-for='data in budget'> -->
+                <tr v-for='data in budgetData'>
                     <td>{{ data.name }}</td>
-                    <td>${{ data.amount }}</td>
-                </template>
-
-                <th>Total</th>
-                <th>{{ totalIncome }}</th>
+                    <td>{{ data.expenditure }}</td>
+                    <td>{{ data.income }}</td>
+                    <td :class='{negative: data.diff < 0, positive: data.diff > 0}'>
+                        {{ data.diff }}
+                    </td>
+                </tr>
             </tbody>
 
             <thead>
-                <th>Expenditure</th>
+                <tr>
+                    <th>Total</th>
+                    <th>{{ totalBudget.expenditure }}</th>
+                    <th>{{ totalBudget.income }}</th>
+                    <th :class='{negative: totalBudget.diff < 0, positive: totalBudget.diff > 0}'>
+                        {{ totalBudget.diff }}
+                    </th>
+                </tr>
             </thead>
-            <tbody>
-                <template v-for='data in expenditure'>
-                    <td>{{ data.name }}</td>
-                    <td>${{ data.amount }}</td>
-                </template>
-
-                <th>Total</th>
-                <th>{{ totalExpenditure }}</th>
-            </tbody>
         </table>
     </div>
 
+    <script src="luxon.min.js"></script>
     <script type='module'>
-        import store from './store.js';
-        import { monthlyExpenditure, totalExpenditure } from './expenditure.js';
+        import store from './store/index.js';
+        import { calculateBudget, totalBudget, monthlyBudget } from './budget/index.js';
 
         const app = Vue.createApp({
             data() {
                 return {
                     income: [],
                     expenditure: [],
-                    totalIncome: 0,
-                    totalExpenditure: 0
+                    budgetData: [],
+                    totalBudget,
+                    // {timePeriod, amount};
                 }
             },
 
             mounted() {
                 store.dispatch('loadState');
-                const income = [],
-                expenditure = [];
-                console.log('moounted:');
-                this.totalExpenditure = totalExpenditure();
-                console.log('store getters:', store.getters.finAid);
+                calculateBudget();
+                this.budgetData = monthlyBudget;
 
-                income.push({name: 'Financial Aid', amount: store.getters.finAid});
-                console.log('monthlyExpenditure:', monthlyExpenditure());
+                console.log('budgetData:', this.budgetData);
+
+                // income.push({name: 'Financial Aid', amount: store.getters.finAid});
+                // console.log('monthlyExpenditure:', monthlyExpenditure());
 
                 // expenditure.push({name: 'Graduation Date', amount: store.getters.gradDate});
 
-                this.totalIncome = income.reduce((sum, data) => sum + parseInt(data.amount), 0);
-
-                this.income = income;
-                this.expenditure = expenditure;
+                // this.totalIncome = income.reduce((sum, data) => sum + parseInt(data.amount), 0);
             }
         });
 

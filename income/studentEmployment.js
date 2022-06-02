@@ -1,30 +1,65 @@
-import store from '../store.js';
+import store from '../store/index.js';
+import { holidays } from '../utils/index.js';
 
-function earningsDuringHolidays(holidays, weeklyHours, hourlyWages) {
-}
-
-function earningsDuringSemesters(weeklyHours, wages) {
-}
+let numSessionWeeks, numHolidayWeeks;
 
 function calculateTotal(holidays, holidayHours, semesters, semesterHours) {
     return earningsDuringSemesters(semesters, semesterHours, wages) + earningsDuringHolidays(holidays, holidayHours, wages);
 }
 
-export default function() {
-    // spring break
-    // summer
-    // christmas
+export default function(start, end) {
+    // console.log('start:', start, 'end:', end);
+    const dateTime0 = luxon.DateTime.fromISO(start);
+    const dateTime1 = luxon.DateTime.fromISO(end);
+    // console.log('start:', dateTime0.toFormat('ff'), '\nend:', dateTime1.toFormat('ff'));
 
-    const holidays = [{
-        name: 'Spring Break', start: 'March 11', end: '18 March'
-    }, {
-        name: 'Summer', start: 'May 15', end: 'August 29'
-    }, {
-        name: 'Christmas', start: 'December 15', end: 'January 21'
-    }];
+    numSessionWeeks = dateTime1.diff(dateTime0, 'weeks').toObject().weeks;
+    numHolidayWeeks = 0;
 
-    const holidayHours = store.getters.weeklyHours.holiday;
-    const semesterHours = store.getters.weeklyHours.semester;
+    holidays.forEach(hol => {
+        const holStart = luxon.DateTime.fromISO( new Date(hol.start).toISOString());
+        const holEnd = luxon.DateTime.fromISO( new Date(hol.end).toISOString());
 
-    return 0;
+        // console.log('\n', hol.name, '\nHoliday Start:', holStart.toFormat('ff'), '\nHoliday End:', holEnd.toFormat('ff'));
+
+        /*
+        console.log(dateTime0.toFormat('ff'), '<',  holStart.toFormat('ff'));
+        console.log(dateTime0 < holStart)
+        console.log(holStart.toFormat('ff'), '<', dateTime1.toFormat('ff'));
+        console.log(holStart < dateTime1)
+        */
+
+        // console.log(dateTime0.toFormat('ff'), '<',  holStart.toFormat('ff'), '<', dateTime1.toFormat('ff'));
+        // console.log(dateTime0 < holStart && holStart < dateTime1)
+
+        if(dateTime0 < holStart && holStart < dateTime1) {
+            // console.log('\n', hol.name, '\nHoliday Start:', holStart.toFormat('ff'), '\nHoliday End:', holEnd.toFormat('ff'));
+            // console.log(dateTime0.toFormat('ff'), '<',  holStart.toFormat('ff'), '<', dateTime1.toFormat('ff'));
+
+            let weeks;
+
+            if(holEnd < dateTime1)
+                weeks = holEnd.diff(holStart, 'weeks').toObject().weeks;
+            else
+                weeks = dateTime1.diff(holStart, 'weeks').toObject().weeks;
+
+            numSessionWeeks -= weeks;
+            numHolidayWeeks += weeks;
+        }
+    });
+
+    // console.log('sessionWeeks:', numSessionWeeks);
+    // console.log('holidayWeeks:', numHolidayWeeks);
+
+    const holidayHours = store.getters.breakWorkHours;
+    const semesterHours = store.getters.sessionWorkHours;
+    const hourlyWage = store.getters.hourlyWage;
+
+    console.log('holidayHOurs:', holidayHours);
+    console.log('semesterHOurs:', semesterHours);
+    // return (holidayHours * numHolidayWeeks) + (semesterHours * numSessionWeeks);
+
+    const totalHours = (holidayHours * numHolidayWeeks) + (semesterHours * numSessionWeeks);
+
+    return totalHours * hourlyWage;
 }

@@ -1,25 +1,31 @@
-import * as insurance from './insurance.js';
-import * as tuition from './tuition.js';
+import insurance from './insurance.js';
+import tuition from './tuition.js';
 import store from '../store/index.js';
+import roomBoard from './roomBoard.js';
 
-export default function(budgetPeriod) {
-}
+export let totalExpenditure;
 
-export function monthlyExpenditure() {
+export default function(start, end, semesters) {
+    /*
+    const ageBracket = (store.getters.birthdate) ? 
+        calcAgeBracket(store.getters.birthdate) : store.getters.ageBracket;
+    */
+
+    const dt0 = luxon.DateTime.fromISO(start);
+    const dt1 = luxon.DateTime.fromISO(end);
+    let months = dt1.diff( dt0, 'months' );
+    months = months.toObject().months;
+    totalExpenditure = insurance(store.getters.birthdate, store.getters.ageBracket, months);
+
+    const sessions = semesters / 2;
+    totalExpenditure += tuition(semesters);
+    totalExpenditure += roomBoard(sessions);
+    // return insurance.monthly(ageData) + monthlyTuition;
+
+    /*
     const ageData = store.getters.birthdate || store.getters.ageBracket;
-    console.log('getters:', store.getters);
-    const monthlyTuition = tuition.total(store.getters.startDate, store.getters.gradDate) / 12;
-
-    console.log(insurance.monthly(ageData));
-    return insurance.monthly(ageData) + monthlyTuition;
-}
-
-export function yearlyExpenditure() {
-    return monthlyExpenditure() * 12;
-}
-
-export function totalExpenditure() {
     const totalYears = tuition.total();
+    */
 
-    return yearlyExpenditure() * totalYears;
+    return totalExpenditure;
 }

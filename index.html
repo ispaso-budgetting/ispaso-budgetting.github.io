@@ -20,6 +20,7 @@
                     <label v-for = 'period in budgetPeriods'>
                         <input type='radio' :value='period.id' v-model='budgetPeriod' name='budgetPeriod' />
                         {{ period.name }}
+                        <!-- :disabled='budgetPeriod.includes(period.excludes)' -->
                     </label>
             </fieldset>
 
@@ -29,16 +30,28 @@
 
                 <fieldset>
                     <legend>Student Employment</legend>
+                    <label>Hourly wage
+                        <input type='number' placeholder='12.5' v-model='hourlyWage' />
+                    </label>
+
                     <label>Projected Weekly Hours
-                        <input type='number' placeholder='20' v-model='wkHours'/>
+                        <input type='number' placeholder='20' max=20  v-model='sessionHours'/>
                         Projected weekly earnings: ${{wkEarnings}} <span>(Income tax subtracted: {{ incomeTax }}%)</span>
                     </label>
                     <a @click='showIncomeTaxInput = !showIncomeTaxInput'>Edit</a>
                     <label v-if='showIncomeTaxInput'>Income Tax: <input type='number' v-model='incomeTax' /></label>
                 </fieldset>
 
-                <label>Other Sources</label>
-                <input type='number' />
+                <legend>Other Sources</legend>
+                <label v-for='(extra, i) in extraIncome' :key='i'>
+                    <input type='text' placeholder='Short description' v-model='extra.name' />
+                    <input type='number' placeholder='$x,xxx' v-model='extra.amount' />
+                    <input type='date' v-model='extra.date' />
+                    <button type='button' @click='extraIncome.splice(i, 1)'>Delete</button>
+                </label>
+
+                <button type='button' @click='addExtraIncome'>Add Extra Income</button>
+
                 <p v-if='pIncome'>Projected Income at the End of Semester = <span>${{ pIncome }}</span></p>
             </fieldset>
 
@@ -46,7 +59,6 @@
                 <legend>Expenditure</legend>
                 </p>For now, we're going to focus on your PrinBill. You can add other expenditures later. This section is to calculate your PrinBill</p>
 
-                <p>Running Total = ${{ totalExpenditure }}</p>
                 <fieldset>
                     <legend>Tuition</legend>
                     <label>When do you expect to graduate?</label>
@@ -90,9 +102,9 @@
 
                     <div v-if='noDOB'>
                         <p>Choose the bracket you fall in.</p>
-                        <label><input type='radio' name='ageBracket' /> Under 25</label>
-                        <label><input type='radio' name='ageBracket' /> 25 - 29</label>
-                        <label><input type='radio' name='ageBracket' /> 30+</label>
+                        <label><input type='radio' value='a' v-model='ageBracket' name='ageBracket' /> Under 25</label>
+                        <label><input type='radio' value='b' v-model='ageBracket' name='ageBracket' /> 25 - 29</label>
+                        <label><input type='radio' value='c' v-model='ageBracket' name='ageBracket' /> 30+</label>
                     </div>
                 </fieldset>
 
@@ -103,6 +115,7 @@
         </form>
     </div>
 
+    <script src="luxon.min.js"></script>
     <script type='module'>
         import countries from './utils/countries.js';
         import store from './store/index.js';
@@ -113,46 +126,71 @@
                 return {
                     budgetPeriods,
                     budgetPeriod: null,
-                    startMonth: null,
-                    startYear: null,
-                    endMonth: null,
-                    endYear: null,
-
-                    finAid: null,
-                    showIncomeTaxInput: false,
-                    incomeTax: 30,
-                    wkHours: null,
 
                     gradYears: [],
                     gradMonth: null,
                     gradYear: null,
 
+                    // INCOME
+                    finAid: null,
+                    hourlyWage: null,
+                    sessionHours: null,
+                    breakHours: null,
+                    extraIncome: [
+                        {name: 'Family', date: new Date(), amount: 2000},
+                        {name: 'Stipends', date: new Date(), amount: null},
+                        {name: 'Awards', date: new Date(), amount: null},
+                    ],
+
+                    // EXPENDITURE
+                    incomeTax: 30,
+                    showIncomeTaxInput: false,
                     waivedInsurance: null,
                     isResident: null,
                     cocz: null,
                     countries: countries,
-                    age: null,
+                    birthdate: null,
+                    ageBracket: null,
                     noDOB: 'notset',
                     maxDOB: null
                 }
             },
 
             methods: {
+                addExtraIncome() {
+                    var today = new Date().toISOString().slice(0, 10);
+
+                    this.extraIncome.push({
+                        name: null, date: today, amount: null
+                    });
+                },
                 save(level) {
-                    store.commit('finAid', this.finAid);
                     store.commit('gradDate', this.gradDate);
-                    store.commit('startDate', this.startDate);
+                    store.commit('finAid', this.finAid);
                     store.commit('birthdate', this.birthdate);
+                    store.commit('ageBracket', this.ageBracket);
+
+                    store.commit('sessionWorkHours', this.sessionHours);
+                    store.commit('breakWorkHours', this.breakHours);
+
+                    store.commit('budgetPeriod', this.budgetPeriod);
+                    store.commit('hourlyWage', this.hourlyWage);
 
                     store.dispatch('save');
                     return false;
                 }
             },
 
-            computed: {
-            },
             mounted() {
-                console.log('budgetPeriods:', budgetPeriods);
+                store.dispatch('loadState');
+
+                console.log('state:', store.state);
+
+                this.finAid = store.getters.finAid;
+                this.hourlyWage = store.getters.hourlyWage;
+                this.birthdate = store.getters.birthdate;
+                this.sessionHours = store.getters.sessionWorkHours;
+                this.breakHours = store.getters.breakWorkHours;
             }
         });
 
