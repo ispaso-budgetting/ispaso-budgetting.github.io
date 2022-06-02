@@ -17,10 +17,22 @@
                 <p>What academic period are you budgeting for?</p>
 
                     <label>Start</label>
-                    <label v-for = 'period in budgetPeriods'>
-                        <input type='radio' :value='period.id' v-model='budgetPeriod' name='budgetPeriod' />
-                        {{ period.name }}
-                    </label>
+                    <select v-model='startSemester'>
+                        <option value='fall'>Fall</option>
+                        <option value='spring'>Spring</option>
+                    </select>
+                    <select v-model='startYear'>
+                        <option v-for='year in budgetYears'>{{ year }}</option>
+                    </select>
+
+                    <label>End Period</label>
+                    <select v-model='endSemester'>
+                        <option value='fall' selected>Fall</option>
+                        <option value='spring'>Spring</option>
+                    </select>
+                    <select v-model='endYear'>
+                        <option v-for='year in budgetYears'>{{ year }}</option>
+                    </select>
             </fieldset>
 
             <fieldset>
@@ -104,15 +116,15 @@
     </div>
 
     <script type='module'>
-        import countries from './utils/countries.js';
+        // cocz = city of citenzenship
+        import { totalExpenditure } from './expenditure';
+        import countries from './countries.js';
         import store from './store/index.js';
-        import { budgetPeriods } from './budget/index.js';
 
         const app = Vue.createApp({
             data() {
                 return {
-                    budgetPeriods,
-                    budgetPeriod: null,
+                    budgetYears: [],
                     startMonth: null,
                     startYear: null,
                     endMonth: null,
@@ -150,9 +162,93 @@
             },
 
             computed: {
+                startYears: function() {
+                    let maxYear = this.gradYear;
+
+                    if(this.startMonth >= this.gradMonth)
+                        maxYear = this.gradYear - 1;
+
+                    const years = []
+
+                    for (let i=0; i <= 10; i++) {
+                        years.push(maxYear - i)
+                    }
+
+                    return years;
+                },
+
+                startDate: function() {
+                    return {
+                        month: this.startMonth,
+                        year: this.startYear
+                    }
+                },
+                gradDate: function() {
+                    return {
+                        month: this.gradMonth,
+                        year: this.gradYear
+                    }
+                },
+                totalExpenditure: function() {
+                    const insurance = {
+                        waived: this.waivedInsurance,
+                        isResident: this.isResident,
+                        cocz: this.cocz
+                    }
+
+                    return totalExpenditure(this.gradDate, insurance, this.age);
+                },
+                prinBill: function() {
+                    const insurance = {
+                        waived: this.waivedInsurance,
+                        isResident: this.isREsident,
+                        cocz: this.cocz
+                    }
+
+                    return calulatePrinbill(this.gradDate, insurance, age)
+                },
+                netExpenses: function() {
+                    let net = this.totalExpenditure - this.finAid;
+                    return net;
+                },
+                pIncome() {
+                    const wkEarnings = this.wkEarnings;
+
+                    if(wkEarnings)
+                        return wkEarnings * 15
+                    else
+                        return null
+                },
+                wkEarnings() {
+                    const wkHours = this.wkHours
+                    if(wkHours) 
+                        return (wkHours * 12.5) * (100 - this.incomeTax)/100
+                    else return null
+                }
             },
             mounted() {
-                console.log('budgetPeriods:', budgetPeriods);
+                store.dispatch('loadState');
+                const now = new Date();
+                const currentYear = now.getFullYear()
+
+                this.budgetYears = [currentYear, currentYear + 1];
+                this.startSemester = 'spring';
+                this.endSemester = 'fall';
+                this.startYear = currentYear;
+                this.endYear = currentYear + 1;
+
+                this.maxDOB = new Date(new Date().setYear(currentYear - 15)).toISOString().split('T')[0];
+
+                this.gradYear = currentYear + 1;
+                this.gradMonth = 7
+                this.startMonth = 7
+
+                const gradYears = []
+                
+                for (let i=0; i <= 10; i++) {
+                    gradYears.push(currentYear + i)
+                }
+                this.gradYears = gradYears
             }
         });
 

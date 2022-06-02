@@ -2,6 +2,7 @@
 <head>
     <title>Results - Principia Budgeting Tool | ISPASO</title>
     <link rel='stylesheet' href='income_form.css'></link>
+    <link rel='stylesheet' href='results.css'></link>
     <script src="vue3.global.js"></script>
     <script src='vuex4.js'></script>
 </head>
@@ -10,33 +11,64 @@
     <div id='app'>
         <table>
             <thead>
-                <td>Income</td>
+                <th>Income</th>
             </thead>
             <tbody>
-                <td v-for='data in income'>{{ data.name }}</td>
+                <template v-for='data in income'>
+                    <td>{{ data.name }}</td>
+                    <td>${{ data.amount }}</td>
+                </template>
+
+                <th>Total</th>
+                <th>{{ totalIncome }}</th>
             </tbody>
 
             <thead>
-                <td>Expenditure</td>
+                <th>Expenditure</th>
             </thead>
             <tbody>
-                <td v-for='data in income'>{{ data.name }}</td>
+                <template v-for='data in expenditure'>
+                    <td>{{ data.name }}</td>
+                    <td>${{ data.amount }}</td>
+                </template>
+
+                <th>Total</th>
+                <th>{{ totalExpenditure }}</th>
             </tbody>
         </table>
     </div>
 
     <script type='module'>
         import store from './store.js';
+        import { monthlyExpenditure, totalExpenditure } from './expenditure.js';
 
         const app = Vue.createApp({
             data() {
                 return {
                     income: [],
-                    expenditure: []
+                    expenditure: [],
+                    totalIncome: 0,
+                    totalExpenditure: 0
                 }
             },
 
             mounted() {
+                store.dispatch('loadState');
+                const income = [],
+                expenditure = [];
+                console.log('moounted:');
+                this.totalExpenditure = totalExpenditure();
+                console.log('store getters:', store.getters.finAid);
+
+                income.push({name: 'Financial Aid', amount: store.getters.finAid});
+                console.log('monthlyExpenditure:', monthlyExpenditure());
+
+                // expenditure.push({name: 'Graduation Date', amount: store.getters.gradDate});
+
+                this.totalIncome = income.reduce((sum, data) => sum + parseInt(data.amount), 0);
+
+                this.income = income;
+                this.expenditure = expenditure;
             }
         });
 

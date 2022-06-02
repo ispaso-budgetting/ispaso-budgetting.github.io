@@ -8,18 +8,9 @@
 // insurance: countries with tax treaties, age brackets
 // programmes that sponsor students during breaks
 import store from '../store.js';
+import * as insurance from './insurance.js';
 
-console.log('store:', store);
-
-export function calcYearlyInsurance(insurance, age) {
-    let total = 0;
-    if(insurance.waived == 0)
-        total += 800;
-
-    return total;
-}
-
-export function calcTax() {
+export function tax() {
 }
 
 export function upcomingExpenditure() {
@@ -27,9 +18,8 @@ export function upcomingExpenditure() {
     // student is not in session.
 }
 
-export function totalExpenditure(gradDate, insurance, age) {
+export function totalExpenditure(gradDate, age) {
     const today = new Date();
-    console.log(insurance);
     let sessions = (gradDate.year - today.getFullYear());
 
     // if(today.getMonth() == 7) // August
@@ -55,7 +45,7 @@ export function totalExpenditure(gradDate, insurance, age) {
     let expenditure = (tuition + room + board + otherFees) * sessions;
 
     // Insurance
-    expenditure += calcYearlyInsurance(insurance, age);
+    expenditure += insurance.yearly(age);
 
     return expenditure;
 }
