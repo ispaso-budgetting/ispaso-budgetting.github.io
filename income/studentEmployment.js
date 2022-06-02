@@ -62,7 +62,6 @@ export default function(start, end) {
     const totalHours = (holidayHours * numHolidayWeeks) + (semesterHours * numSessionWeeks);
 
     const incomeTax = store.getters.incomeTax;
-    console.log('incomeTax:', 1 - (incomeTax/100))
 
     return (totalHours * hourlyWage) * (1 - (incomeTax/100));
 }

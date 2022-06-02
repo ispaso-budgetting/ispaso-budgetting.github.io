@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <head>
-    <title>Results - Principia Budgeting Tool | ISPASO</title>
+    <title>Budget - Principia Budgeting Tool | ISPASO</title>
     <link rel='stylesheet' href='income_form.css'></link>
     <link rel='stylesheet' href='results.css'></link>
     <script src="vue3.global.js"></script>
@@ -9,6 +9,7 @@
 
 <body>
     <div id='app'>
+        <h1>Budget for {{ budgetTitle }}</h1>
         <table>
             <thead>
                 <tr>
@@ -45,7 +46,7 @@
     <script src="luxon.min.js"></script>
     <script type='module'>
         import store from './store/index.js';
-        import { calculateBudget, totalBudget, monthlyBudget } from './budget/index.js';
+        import { budgetTitle, calculateBudget, totalBudget, monthlyBudget } from './budget/index.js';
 
         const app = Vue.createApp({
             data() {
@@ -53,8 +54,8 @@
                     income: [],
                     expenditure: [],
                     budgetData: [],
+                    budgetTitle,
                     totalBudget,
-                    // {timePeriod, amount};
                 }
             },
 
@@ -63,7 +64,7 @@
                 calculateBudget();
                 this.budgetData = monthlyBudget;
 
-                console.log('budgetData:', this.budgetData);
+                this.budgetTitle = budgetTitle;
 
                 // income.push({name: 'Financial Aid', amount: store.getters.finAid});
                 // console.log('monthlyExpenditure:', monthlyExpenditure());
