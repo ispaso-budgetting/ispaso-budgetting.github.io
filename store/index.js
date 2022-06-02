@@ -39,8 +39,8 @@ getters.breakWorkHours = (state) => state.weeklyHours.breaks;
 getters.sessionWorkHours = (state) => state.weeklyHours.session;
 getters.hourlyWage = (state) => state.hourlyWage;
 
-mutations.breakWorkHours = (state, payload) => state.weeklyHours.breaks = payload;
-mutations.sessionWorkHours = (state, payload) => state.weeklyHours.session = payload;
+mutations.breakWorkHours = (state, payload) => (payload) ? state.weeklyHours.breaks = payload : 40;
+mutations.sessionWorkHours = (state, payload) => (payload) ? state.weeklyHours.session = payload : 20;
 mutations.weeklyHours = (state, payload) => {
     if(payload) {
         if(payload.breaks)
@@ -50,7 +50,17 @@ mutations.weeklyHours = (state, payload) => {
     }
 }
 
-mutations.hourlyWage = (state, payload) => state.hourlyWage = payload;
+mutations.hourlyWage = (state, payload) => (payload) ? state.hourlyWage = payload : 12.5;
+
+// TAX
+state.incomeTax = 30;
+getters.incomeTax = (state) => 30;
+mutations.incomeTax = (state, payload) => {
+    if(payload)
+        state.incomeTax = payload;
+    else
+        state.incomeTax = 30;
+}
 
 // BUDGETING
 state.budgetPeriod = {};

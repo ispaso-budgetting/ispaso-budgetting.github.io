@@ -60,18 +60,6 @@
                 </p>For now, we're going to focus on your PrinBill. You can add other expenditures later. This section is to calculate your PrinBill</p>
 
                 <fieldset>
-                    <legend>Tuition</legend>
-                    <label>When do you expect to graduate?</label>
-                    <select v-model='gradMonth'>
-                        <option value='7' selected>August</option>
-                        <option value='11'>December</option>
-                    </select>
-                    <select v-model='gradYear'>
-                        <option v-for='year in gradYears'>{{ year }}</option>
-                    </select>
-                </fieldset>
-
-                <fieldset>
                     <legend>Tax</legend>
                     <label>
                         Have you been in the US for at least 5 years?
@@ -108,8 +96,6 @@
                     </div>
                 </fieldset>
 
-                <p>In total, you will be paying ${{ netExpenses }}</p>
-
                 <input type='submit' value='Save' />
 
                 <a href='/results' target='_blank'>View Results</a>
@@ -145,7 +131,7 @@
                     ],
 
                     // EXPENDITURE
-                    incomeTax: 30,
+                    incomeTax: null,
                     showIncomeTaxInput: false,
                     waivedInsurance: null,
                     isResident: null,
@@ -177,6 +163,7 @@
 
                     store.commit('budgetPeriod', this.budgetPeriod);
                     store.commit('hourlyWage', this.hourlyWage);
+                    store.commit('incomeTax', this.incomeTax);
 
                     store.dispatch('save');
                     return false;
@@ -193,6 +180,7 @@
                 this.birthdate = store.getters.birthdate;
                 this.sessionHours = store.getters.sessionWorkHours;
                 this.breakHours = store.getters.breakWorkHours;
+                this.incomeTax = store.getters.incomeTax;
             }
         });
 
