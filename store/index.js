@@ -1,30 +1,29 @@
 import calcAgeBracket from '../utils/ageBracket.js';
 import saveData from './saveData.js';
 import retrieveData from './retrieveData.js';
+import resetData from './resetData.js';
 
 const state = { }, getters = {}, mutations = {};
 
 // AGE
 state.ageBracket = null;
-state.birthdate = null;
-
-getters.birthdate = (state) => state.birthdate;
-
 getters.ageBracket = function(state) {
     if(!state.birthdate && state.ageBracket)
         return state.ageBracket;
-    else if(state.birthdate)
-        return calcAgeBracket(state.birthdate);
     else return null;
 }
-
 mutations.ageBracket = function(state, payload) {
     if(!state.birthdate)
         state.ageBracket = payload;
 }
+
+state.birthdate = null;
+getters.birthdate = (state) => state.birthdate;
 mutations.birthdate = function(state, payload) {
     state.birthdate = payload
-    if(state.ageBracket)
+    if(!payload)
+        resetData('birthdate');
+    else if(state.ageBracket)
         state.ageBracket = null;
 }
 
@@ -110,17 +109,6 @@ const store = Vuex.createStore({
 
                 commit(key, data);
             }
-
-            /*
-            const keys = ['startDate', 'gradDate', 'finAid', 'birthdate'];
-
-            for (const key of keys) {
-                console.log('skey:', key);
-                const data = retrieveData(key);
-
-                commit(key, data);
-            }
-            */
         }
     }
 });

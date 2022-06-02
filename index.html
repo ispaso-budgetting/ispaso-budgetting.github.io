@@ -36,10 +36,7 @@
 
                     <label>Projected Weekly Hours
                         <input type='number' placeholder='20' max=20  v-model='sessionHours'/>
-                        Projected weekly earnings: ${{wkEarnings}} <span>(Income tax subtracted: {{ incomeTax }}%)</span>
                     </label>
-                    <a @click='showIncomeTaxInput = !showIncomeTaxInput'>Edit</a>
-                    <label v-if='showIncomeTaxInput'>Income Tax: <input type='number' v-model='incomeTax' /></label>
                 </fieldset>
 
                 <legend>Other Sources</legend>
@@ -52,7 +49,12 @@
 
                 <button type='button' @click='addExtraIncome'>Add Extra Income</button>
 
-                <p v-if='pIncome'>Projected Income at the End of Semester = <span>${{ pIncome }}</span></p>
+                <p><button type='button' @click='showAdvancedIncome = !showAdvancedIncome'><span v-if='showAdvancedIncome'>Hide</span><span v-else>Show</span> Advanced</button></p>
+
+                <fieldset v-if='showAdvancedIncome'>
+                    <legend>Advanced</legend>
+                    <label>Income Tax: <input type='number' v-model='incomeTax' /></label>
+                </fieldset>
             </fieldset>
 
             <fieldset>
@@ -83,7 +85,7 @@
                     <label><input type='radio' value=0 v-model='waivedInsurance' />No</label>
 
                     <p>Age</p>
-                    <label>Date of Birth
+                    <label v-if='!noDOB'>Date of Birth
                         <input type='date' :max='maxDOB' v-model='birthdate'>
                     </label>
                     <label>I don't want to enter my date of birth <input type='checkbox' v-model='noDOB' /></label>
@@ -132,14 +134,14 @@
 
                     // EXPENDITURE
                     incomeTax: null,
-                    showIncomeTaxInput: false,
+                    showAdvancedIncome: false,
                     waivedInsurance: null,
                     isResident: null,
                     cocz: null,
                     countries: countries,
                     birthdate: null,
                     ageBracket: null,
-                    noDOB: 'notset',
+                    noDOB: false,
                     maxDOB: null
                 }
             },
@@ -155,8 +157,12 @@
                 save(level) {
                     store.commit('gradDate', this.gradDate);
                     store.commit('finAid', this.finAid);
-                    store.commit('birthdate', this.birthdate);
+                    console.log('ageBracket:', this.ageBracket);
                     store.commit('ageBracket', this.ageBracket);
+                    if(this.noDOB)
+                        store.commit('birthdate', null);
+                    else
+                        store.commit('birthdate', this.birthdate);
 
                     store.commit('sessionWorkHours', this.sessionHours);
                     store.commit('breakWorkHours', this.breakHours);
@@ -177,7 +183,11 @@
 
                 this.finAid = store.getters.finAid;
                 this.hourlyWage = store.getters.hourlyWage;
+                this.ageBracket = store.getters.ageBracket;
                 this.birthdate = store.getters.birthdate;
+                if(!this.birthdate && this.ageBracket)
+                    this.noDOB = true;
+
                 this.sessionHours = store.getters.sessionWorkHours;
                 this.breakHours = store.getters.breakWorkHours;
                 this.incomeTax = store.getters.incomeTax;
