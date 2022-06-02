@@ -1,8 +1,10 @@
+import { finAid } from '../income/index.js';
 import insurance from './insurance.js';
 import tuition from './tuition.js';
 import store from '../store/index.js';
 import roomBoard from './roomBoard.js';
 import miscPrin from './miscPrin.js';
+import tax from './tax.js';
 
 export let totalExpenditure;
 
@@ -19,9 +21,11 @@ export default function(start, end, semesters) {
     months = months.toObject().months;
 
     totalExpenditure = tuition(semesters);
-    totalExpenditure += insurance(store.getters.birthdate, store.getters.ageBracket, months);
     totalExpenditure += roomBoard(sessions);
     totalExpenditure += miscPrin(sessions);
+
+    totalExpenditure += tax(finAid(), totalExpenditure);
+    totalExpenditure += insurance(store.getters.birthdate, store.getters.ageBracket, months);
 
     /*
     const ageData = store.getters.birthdate || store.getters.ageBracket;
