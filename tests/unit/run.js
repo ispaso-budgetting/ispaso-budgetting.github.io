@@ -1,0 +1,3 @@
+mocha.checkLeaks();
+mocha.run();
+

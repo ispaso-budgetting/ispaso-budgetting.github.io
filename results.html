@@ -4,7 +4,6 @@
     <link rel='stylesheet' href='income_form.css'></link>
     <link rel='stylesheet' href='results.css'></link>
     <script src="vue3.global.js"></script>
-    <script src='vuex4.js'></script>
 </head>
 
 <body>
@@ -43,7 +42,6 @@
         </table>
     </div>
 
-    <script src="luxon.min.js"></script>
     <script type='module'>
         import store from './store/index.js';
         import { budgetTitle, calculateBudget, totalBudget, monthlyBudget } from './budget/index.js';
@@ -60,7 +58,6 @@
             },
 
             mounted() {
-                store.dispatch('loadState');
                 calculateBudget();
                 this.budgetData = monthlyBudget;
 

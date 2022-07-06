@@ -3,109 +3,123 @@
     <title>Principia Budgeting Tool | ISPASO</title>
     <link rel='stylesheet' href='income_form.css'></link>
     <script src="vue3.global.js"></script>
-    <script src='vuex4.js'></script>
 </head>
 
 <body>
     <div id='app'>
-        <h1>Prinbill Budgeting Tool</h1>
-        <p>By ISPASO</p>
+      <h1>Prinbill Budgeting Tool</h1>
+      <p>By ISPASO</p>
 
-        <form @submit.prevent='save(1)'>
-            <fieldset>
-                <legend>Hi. Nice to meet you</legend>
-                <p>What academic period are you budgeting for?</p>
+      <form @submit.prevent='save(1)'>
+        <fieldset>
+          <legend>Hi. Nice to meet you</legend>
+          <p>What academic period are you budgeting for?</p>
+          <label>Start</label>
+          <label v-for = 'period in budgetPeriods'>
+            <input type='radio' :value='period.id' v-model='budgetPeriod' name='budgetPeriod' />
+            {{ period.name }}
+            <!-- :disabled='budgetPeriod.includes(period.excludes)' -->
+          </label>
+        </fieldset>
 
-                    <label>Start</label>
-                    <label v-for = 'period in budgetPeriods'>
-                        <input type='radio' :value='period.id' v-model='budgetPeriod' name='budgetPeriod' />
-                        {{ period.name }}
-                        <!-- :disabled='budgetPeriod.includes(period.excludes)' -->
-                    </label>
-            </fieldset>
+        <fieldset>
+          <legend>Income</legend>
+          <label>Financial Aid: <input type = 'number' v-model='finAid' placeholder = '$xx,xxx.xx' /></label>
 
-            <fieldset>
-                <legend>Income</legend>
-                <label>Financial Aid: <input type = 'number' v-model='finAid' placeholder = '$xx,xxx.xx' /></label>
+          <h6>Student Employment</h6>
+          <label>Hourly wage
+            <input type='number' placeholder='12.5' v-model='hourlyWage' />
+          </label>
 
-                <fieldset>
-                    <legend>Student Employment</legend>
-                    <label>Hourly wage
-                        <input type='number' placeholder='12.5' v-model='hourlyWage' />
-                    </label>
+          <label>Projected Weekly Hours
+            <input type='number' placeholder='20' max=20  v-model='sessionHours'/>
+          </label>
 
-                    <label>Projected Weekly Hours
-                        <input type='number' placeholder='20' max=20  v-model='sessionHours'/>
-                    </label>
-                </fieldset>
+          <h6>Other Income Sources</h6>
+          <label v-for='(extra, i) in extraIncome' :key='i'>
+            <input type='text' placeholder='Short description' v-model='extra.name' />
+            <input type='number' placeholder='$x,xxx' v-model='extra.amount' />
+            <input type='date' v-model='extra.date' />
+            <button type='button' @click='extraIncome.splice(i, 1)'>Delete</button>
+          </label>
 
-                <legend>Other Sources</legend>
-                <label v-for='(extra, i) in extraIncome' :key='i'>
-                    <input type='text' placeholder='Short description' v-model='extra.name' />
-                    <input type='number' placeholder='$x,xxx' v-model='extra.amount' />
-                    <input type='date' v-model='extra.date' />
-                    <button type='button' @click='extraIncome.splice(i, 1)'>Delete</button>
-                </label>
+          <button type='button' @click='addExtraIncome'>Add Extra Income</button>
 
-                <button type='button' @click='addExtraIncome'>Add Extra Income</button>
+          <p><button type='button' @click='showAdvancedIncome = !showAdvancedIncome'><span v-if='showAdvancedIncome'>Hide</span><span v-else>Show</span> Advanced</button></p>
 
-                <p><button type='button' @click='showAdvancedIncome = !showAdvancedIncome'><span v-if='showAdvancedIncome'>Hide</span><span v-else>Show</span> Advanced</button></p>
+          <fieldset v-if='showAdvancedIncome'>
+            <legend>Advanced</legend>
+            <label>Income Tax: <input type='number' v-model='incomeTax' /></label>
+          </fieldset>
+        </fieldset>
 
-                <fieldset v-if='showAdvancedIncome'>
-                    <legend>Advanced</legend>
-                    <label>Income Tax: <input type='number' v-model='incomeTax' /></label>
-                </fieldset>
-            </fieldset>
+        <fieldset>
+          <legend>Expenditure</legend>
+          </p>For now, we're going to focus on your PrinBill. You can add other expenditures later. This section is to calculate your PrinBill</p>
 
-            <fieldset>
-                <legend>Expenditure</legend>
-                </p>For now, we're going to focus on your PrinBill. You can add other expenditures later. This section is to calculate your PrinBill</p>
+          <h6>Tax</h6>
+          <label>
+            Have you been in the US for at least 5 years?
 
-                <fieldset>
-                    <legend>Tax</legend>
-                    <label>
-                        Have you been in the US for at least 5 years?
+            <label><input type='radio' value=1 v-model='isResident' />Yes</label>
+            <label><input type='radio' value=0 v-model='isResident' />No</label>
+          </label>
 
-                        <label><input type='radio' value=1 v-model='isResident' />Yes</label>
-                        <label><input type='radio' value=0 v-model='isResident' />No</label>
-                    </label>
+          <div v-if='isResident == 0'>
+            <label>Country of Citizenship</label>
+            <select v-model='cocz'>
+              <option v-for='country in countries' :value='country.code'>{{ country.name }}</option>
+            </select>
+          </div>
 
-                    <div v-if='isResident == 0'>
-                        <label>Country of Citizenship</label>
-                        <select v-model='cocz'>
-                            <option v-for='country in countries' :value='country.code'>{{ country.name }}</option>
-                        </select>
-                    </div>
-                </fieldset>
+          <h6>Insurance</h6>
+          <label>Did you waive your insurance?</label>
+          <label><input type='radio' value=1 v-model='waivedInsurance' />Yes</label>
+          <label><input type='radio' value=0 v-model='waivedInsurance' />No</label>
 
-                <fieldset>
-                    <legend>Insurance</legend>
-                    <label>Did you waive your insurance?</label>
-                    <label><input type='radio' value=1 v-model='waivedInsurance' />Yes</label>
-                    <label><input type='radio' value=0 v-model='waivedInsurance' />No</label>
+          <!--
+            <h6>Age</h6>
+            <label v-if='!noDOB'>Date of Birth
+            <input type='date' :max='maxDOB' v-model='birthdate'>
+            </label>
+            <label>I don't want to enter my date of birth <input type='checkbox' v-model='noDOB' /></label>
 
-                    <p>Age</p>
-                    <label v-if='!noDOB'>Date of Birth
-                        <input type='date' :max='maxDOB' v-model='birthdate'>
-                    </label>
-                    <label>I don't want to enter my date of birth <input type='checkbox' v-model='noDOB' /></label>
+            <div v-if='noDOB'>
+            <p>Choose the bracket you fall in.</p>
+            <label><input type='radio' value='a' v-model='ageBracket' name='ageBracket' /> Under 25</label>
+            <label><input type='radio' value='b' v-model='ageBracket' name='ageBracket' /> 25 - 29</label>
+            <label><input type='radio' value='c' v-model='ageBracket' name='ageBracket' /> 30+</label>
+            </div>
+          -->
 
-                    <div v-if='noDOB'>
-                        <p>Choose the bracket you fall in.</p>
-                        <label><input type='radio' value='a' v-model='ageBracket' name='ageBracket' /> Under 25</label>
-                        <label><input type='radio' value='b' v-model='ageBracket' name='ageBracket' /> 25 - 29</label>
-                        <label><input type='radio' value='c' v-model='ageBracket' name='ageBracket' /> 30+</label>
-                    </div>
-                </fieldset>
+          <h6>Other Expenses</h6>
+          <h6>Break Housing</h6>
+          <label>How many days are you staying in break housing
+            <input type='number' />
+          </label>
 
-                <input type='submit' value='Save' />
+          <h6>Course Fees</h6>
+          <p>Do you have any courses that have fees attached?</p>
+          <input type='number' placeholder='$XXX' />
 
-                <a href='./results' target='_blank'>View Results</a>
-            </fieldset>
-        </form>
+          <h6>Extra expenses</h6>
+          <p>Enter any extra expenses</p>
+          <label v-for='(extra, i) in extraExpenditure' :key='i'>
+            <input type='text' placeholder='Short description' v-model='extra.name' />
+            <input type='number' placeholder='$x,xxx' v-model='extra.amount' />
+            <input type='date' v-model='extra.date' />
+            <button type='button' @click='extraExpenditure.splice(i, 1)'>Delete</button>
+          </label>
+
+          <button type='button' @click='addExtraExpenditure'>Add Extra Expense</button>
+
+          <button>Save</button>
+
+          <a href='./results' target='_blank'>View Results</a>
+        </fieldset>
+      </form>
     </div>
 
-    <script src="luxon.min.js"></script>
     <script type='module'>
         import countries from './utils/countries.js';
         import store from './store/index.js';
@@ -126,11 +140,8 @@
                     hourlyWage: null,
                     sessionHours: null,
                     breakHours: null,
-                    extraIncome: [
-                        {name: 'Family', date: new Date(), amount: 2000},
-                        {name: 'Stipends', date: new Date(), amount: null},
-                        {name: 'Awards', date: new Date(), amount: null},
-                    ],
+                    extraIncome: null,
+                    extraExpenditure: null,
 
                     // EXPENDITURE
                     incomeTax: null,
@@ -154,43 +165,49 @@
                         name: null, date: today, amount: null
                     });
                 },
+                addExtraExpenditure() {
+                    var today = new Date().toISOString().slice(0, 10);
+
+                    this.extraExpenditure.push({
+                        name: null, date: today, amount: null
+                    });
+                },
                 save(level) {
-                    store.commit('gradDate', this.gradDate);
-                    store.commit('finAid', this.finAid);
-                    console.log('ageBracket:', this.ageBracket);
-                    store.commit('ageBracket', this.ageBracket);
+                  const {
+                    gradDate, finAid, ageBracket,
+                    sessionHours, breakHours, 
+                    budgetPeriod, hourlyWage, incomeTax,
+                    birthdate, extraExpenditure, extraIncome
+                  } = this;
+
+                  store.save({
+                    birthdate,
+                    extraIncome, extraExpenditure,
+                    gradDate, finAid, ageBracket,
+                    sessionHoursPerWeek: sessionHours,
+                    budgetPeriod, hourlyWage, incomeTax,
+                  });
+
                     if(this.noDOB)
-                        store.commit('birthdate', null);
-                    else
-                        store.commit('birthdate', this.birthdate);
+                        store.save('birthdate', null);
 
-                    store.commit('sessionWorkHours', this.sessionHours);
-                    store.commit('breakWorkHours', this.breakHours);
-
-                    store.commit('budgetPeriod', this.budgetPeriod);
-                    store.commit('hourlyWage', this.hourlyWage);
-                    store.commit('incomeTax', this.incomeTax);
-
-                    store.dispatch('save');
                     return false;
                 }
             },
 
             mounted() {
-                store.dispatch('loadState');
-
-                console.log('state:', store.state);
-
-                this.finAid = store.getters.finAid;
-                this.hourlyWage = store.getters.hourlyWage;
-                this.ageBracket = store.getters.ageBracket;
-                this.birthdate = store.getters.birthdate;
+                this.budgetPeriod = store.get('budgetPeriod');
+                this.finAid = store.get("finAid");
+                this.extraIncome = store.get("extraIncome");
+                this.extraExpenditure = store.get("extraExpenditure");
+                this.hourlyWage = store.get("hourlyWage");
+                this.ageBracket = store.get("ageBracket");
+                this.birthdate = store.get("birthdate");
                 if(!this.birthdate && this.ageBracket)
                     this.noDOB = true;
 
-                this.sessionHours = store.getters.sessionWorkHours;
-                this.breakHours = store.getters.breakWorkHours;
-                this.incomeTax = store.getters.incomeTax;
+                this.sessionHours = store.get("sessionHoursPerWeek");
+                this.incomeTax = store.get("incomeTax");
             }
         });
 

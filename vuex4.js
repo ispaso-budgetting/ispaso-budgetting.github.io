@@ -1196,3 +1196,5 @@ var Vuex = (function (vue) {
   return index_cjs;
 
 }(Vue));
+
+export default Vuex;

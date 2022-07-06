@@ -1,4 +1,3 @@
-import './income.test.js';
-
-mocha.checkLeaks();
-mocha.run();
+import './income.extraIncome.test.js';
+import './income.studentEmployment.test.js';
+import './expenditure.extra.test.js';

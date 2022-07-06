@@ -5,7 +5,7 @@ import store from '../store/index.js';
 export let total = {income: 0, expenditure: 0};
 
 export function monthly(timePeriod = 'monthly') {
-    const budgetPeriod = store.getters.budgetPeriod;
+    const budgetPeriod = store.get('budgetPeriod');
     // console.log(budgetPeriod);
     const semester = budgetPeriod.split('.')[0];
     const year = budgetPeriod.split('.')[1];
@@ -21,8 +21,8 @@ export function monthly(timePeriod = 'monthly') {
         end = 'December 31 ' + year;
     }
 
-    start = new Date(start + ' UTC').toISOString();
-    end = new Date(end + ' UTC').toISOString();
+    start = new Date(start + ' UTC');
+    end = new Date(end + ' UTC');
 
     const countSemesters = 1;
     calculateIncome(start, end, countSemesters);
