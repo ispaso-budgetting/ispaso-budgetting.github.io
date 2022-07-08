@@ -9,14 +9,17 @@ export const semesters = {
 
 export const sessions = {
     '21/22': {
+        // name: '2021-2022',
         'fall': semesters['fall.21'],
         'spring': semesters['spring.22']
     },
     '22/23': {
+        // name: '2022-2023',
         'fall': semesters['fall.22'],
         'spring': semesters['spring.23']
     },
     '23/24': {
+        // name: '2023-2024',
         'fall': semesters['fall.23'],
         'spring': semesters['spring.24']
     },

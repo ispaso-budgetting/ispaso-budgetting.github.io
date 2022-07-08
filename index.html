@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <head>
     <title>Principia Budgeting Tool | ISPASO</title>
-    <link rel='stylesheet' href='income_form.css'></link>
+    <link rel='stylesheet' href='/styles/form.css'></link>
     <script src="/dependencies/vue3.global.js"></script>
 </head>
 
@@ -13,13 +13,27 @@
       <form @submit.prevent='save(1)'>
         <fieldset>
           <legend>Hi. Nice to meet you</legend>
-          <p>What academic period are you budgeting for?</p>
-          <label>Start</label>
-          <label v-for = 'period in budgetPeriods'>
-            <input type='radio' :value='period.id' v-model='budgetPeriod' name='budgetPeriod' />
-            {{ period.name }}
-            <!-- :disabled='budgetPeriod.includes(period.excludes)' -->
-          </label>
+          <p>What academic periods are you budgeting for?</p>
+          <div v-for = '(session, key) in academicSessions'>
+            <label>
+              <input type='radio' :value='key' v-model='academicSession'
+                @click='semesters = Object.keys(session).map(a => a)'/>
+
+              20{{ key.substring(0,2) }} - 20{{ key.substring(3) }}
+
+              <div v-if='academicSession == key'>
+                <label v-for='(period, name) in session' style='padding-left: 2rem'>
+                  <input type='checkbox' :value='name' v-model='semesters' />
+                  {{ period.name }}
+                </label>
+              </div>
+            </label>
+          </div>
+
+          <!--
+          <p>Academic Session: {{ academicSession }}</p>
+          <p>Semesters: {{ semesters }}</p>
+          -->
         </fieldset>
 
         <fieldset>
@@ -41,13 +55,13 @@
             <h6>{{ h.name }}</h6>
 
             <label>
-              How many hours per week will you work in {{h.name}}
-              <input type='number' v-model='h.hoursPerWeek' />
+              How many hours per week will you be working on campus during {{h.name}}?
+              <input class='block' type='number' v-model='h.hoursPerWeek' />
             </label>
 
             <label>
-              How many weeks will you be available for {{h.name}}
-              <input type='number' v-model='h.weeksAvailable' />
+              How many weeks will you work on campus during {{h.name}}?
+              <input class='block' type='number' v-model='h.weeksAvailable' />
             </label>
           </div>
 
@@ -73,6 +87,7 @@
           <legend>Expenditure</legend>
           </p>For now, we're going to focus on your PrinBill. You can add other expenditures later. This section is to calculate your PrinBill</p>
 
+          <!--
           <h6>Tax</h6>
           <label>
             Have you been in the US for at least 5 years?
@@ -87,6 +102,7 @@
               <option v-for='country in countries' :value='country.code'>{{ country.name }}</option>
             </select>
           </div>
+          -->
 
           <h6>Insurance</h6>
           <label>Did you waive your insurance?</label>
@@ -140,12 +156,14 @@
         import countries from './utils/countries.js';
         import defaultHolidayWork from '/utils/holidays.js';
         import store from './store/index.js';
-        import { budgetPeriods } from './budget/index.js';
+        import { sessions as academicSessions } from '/utils/semesters.js';
 
         const app = Vue.createApp({
             data() {
                 return {
-                    budgetPeriods,
+                    academicSessions,
+                    academicSession: null,
+                    semesters: [],
                     budgetPeriod: null,
 
                     gradYears: [],

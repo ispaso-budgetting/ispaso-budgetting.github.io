@@ -2,9 +2,13 @@ label {
     display: block;
 }
 
-h6 {
+h4, h5, h6 {
     font-size: 1rem;
     border-bottom: 0;
     padding-bottom: 0;
     margin-block-end: 0.2rem;
+}
+
+.block {
+    display: block;
 }
