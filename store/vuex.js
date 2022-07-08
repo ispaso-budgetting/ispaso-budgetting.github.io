@@ -2,17 +2,20 @@ import Vuex from '../vuex4.js'
 
 import calcAgeBracket from '../utils/ageBracket.js';
 import { save as saveData, retrieve as retrieveData, reset as resetData } from './localStorage.js';
-import defaultValues from './defaultValues.js';
+import getDefaultValues from './defaultValues.js';
 
 let getters = {}, mutations = {};
 
-for(const key in defaultValues) {
-    getters[key] = (state) => state[key] || defaultValues[key]
-    mutations[key] = (state, payload) => {
-        if(payload)
-            state[key] = payload
+(() => {
+    const defaultValues = getDefaultValues();
+    for(const key in defaultValues) {
+        getters[key] = (state) => state[key] || defaultValues[key]
+        mutations[key] = (state, payload) => {
+            if(payload)
+                state[key] = payload
+        }
     }
-}
+})()
 
 getters.sessionHourlyWage = getters.hourlyWage;
 
@@ -26,6 +29,28 @@ mutations.birthdate = function(state, payload) {
 getters.breakWorkHours = (state) => state.weeklyHours.breaks;
 getters.sessionWorkHours = (state) => parseFloat(state.sessionHoursPerWeek);
 getters.hourlyWage = (state) => parseFloat(state.hourlyWage);
+
+mutations.holidayWorkHours = function(state, payload) {
+    const h = state.holidayWork[payload.key];
+    if(h)
+        h.hoursPerWeek = payload.value;
+    else {
+        state.holidayWork[payload.key] = {
+            hoursPerWeek: payload.value
+        }
+    }
+}
+
+mutations.holidayWorkWeeksAvailable = function(state, payload) {
+    const h = state.holidayWork[payload.key];
+    if(h)
+        h.weeksAvailable = payload.value;
+    else {
+        state.holidayWork[payload.key] = {
+            weeksAvailable: payload.value
+        }
+    }
+}
 
 mutations.breakWorkHours = (state, payload) => (payload) ? state.weeklyHours.breaks = payload : 40;
 
@@ -42,12 +67,14 @@ mutations.budgetPeriod = (state, payload) => state.budgetPeriod = payload;
 
 const store = Vuex.createStore({
     state() {
-        defaultValues
+        return getDefaultValues()
     },
     getters,
     mutations: {
         ...mutations,
-        reset: (state) => Object.assign(state, defaultValues),
+        reset: (state) => {
+            Object.assign(state, getDefaultValues())
+        },
         finAid: (state, payload) => state.finAid = payload,
 
         gradDate(state, payload) {
@@ -63,6 +90,7 @@ const store = Vuex.createStore({
         },
 
         loadState({ state,  commit }) {
+            const defaultValues = getDefaultValues();
             for(const key in defaultValues) {
                 const data = retrieveData(key);
 

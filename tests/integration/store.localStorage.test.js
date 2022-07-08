@@ -1,4 +1,4 @@
-import { faker } from 'https://cdn.skypack.dev/@faker-js/faker';
+import { faker } from '/tests/dependencies/faker-esm.js';
 import { save, retrieve} from '../../store/localStorage.js';
 
 describe('LocalStorage test', function() {

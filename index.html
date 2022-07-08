@@ -2,7 +2,7 @@
 <head>
     <title>Principia Budgeting Tool | ISPASO</title>
     <link rel='stylesheet' href='income_form.css'></link>
-    <script src="vue3.global.js"></script>
+    <script src="/dependencies/vue3.global.js"></script>
 </head>
 
 <body>
@@ -26,14 +26,30 @@
           <legend>Income</legend>
           <label>Financial Aid: <input type = 'number' v-model='finAid' placeholder = '$xx,xxx.xx' /></label>
 
-          <h6>Student Employment</h6>
+          <h4>Student Employment</h4>
           <label>Hourly wage
             <input type='number' placeholder='12.5' v-model='hourlyWage' />
           </label>
 
-          <label>Projected Weekly Hours
+          <label>Projected Weekly Hours in session
             <input type='number' placeholder='20' max=20  v-model='sessionHours'/>
           </label>
+
+          <h5>How will you work during the holidays</h5>
+
+          <div v-for='h in holidayWork'>
+            <h6>{{ h.name }}</h6>
+
+            <label>
+              How many hours per week will you work in {{h.name}}
+              <input type='number' v-model='h.hoursPerWeek' />
+            </label>
+
+            <label>
+              How many weeks will you be available for {{h.name}}
+              <input type='number' v-model='h.weeksAvailable' />
+            </label>
+          </div>
 
           <h6>Other Income Sources</h6>
           <label v-for='(extra, i) in extraIncome' :key='i'>
@@ -122,6 +138,7 @@
 
     <script type='module'>
         import countries from './utils/countries.js';
+        import defaultHolidayWork from '/utils/holidays.js';
         import store from './store/index.js';
         import { budgetPeriods } from './budget/index.js';
 
@@ -140,6 +157,7 @@
                     hourlyWage: null,
                     sessionHours: null,
                     breakHours: null,
+                    holidayWork: {},
                     extraIncome: null,
                     extraExpenditure: null,
 
@@ -196,15 +214,18 @@
             },
 
             mounted() {
+                this.holidayWork = store.get('holidayWork');
                 this.budgetPeriod = store.get('budgetPeriod');
                 this.finAid = store.get("finAid");
                 this.extraIncome = store.get("extraIncome");
                 this.extraExpenditure = store.get("extraExpenditure");
                 this.hourlyWage = store.get("hourlyWage");
-                this.ageBracket = store.get("ageBracket");
+                // this.ageBracket = store.get("ageBracket");
                 this.birthdate = store.get("birthdate");
+                /*
                 if(!this.birthdate && this.ageBracket)
                     this.noDOB = true;
+                */
 
                 this.sessionHours = store.get("sessionHoursPerWeek");
                 this.incomeTax = store.get("incomeTax");

@@ -2,24 +2,24 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Unit Tests | Principia Budgeting Tool</title>
+    <title>Integration Tests | Principia Budgeting Tool</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="https://unpkg.com/mocha/mocha.css" />
-    <script src="../vue3.global.js"></script>
+    <link rel="stylesheet" href="/tests/dependencies/mocha.css" />
+    <script src="/dependencies/vue3.global.js"></script>
   </head>
   <body>
     <div id="mocha"></div>
 
-    <script src="https://unpkg.com/chai/chai.js"></script>
-    <script>
-      var { expect } = chai;
-    </script>
-    <script src="https://unpkg.com/mocha/mocha.js"></script>
+    <script src="/tests/dependencies/chai.js"></script>
+    <script src="/tests/dependencies/mocha.js"></script>
+    <script> var { expect } = chai; </script>
 
-    <script type="text/javascript" src="../dependencies/faker.js"></script>
     <script type='module' class="mocha-init">
       mocha.setup('bdd');
     </script>
     <script type='module' src="index.js"></script>
+    <script type='module' src="run.js"></script>
   </body>
 </html>
+
+

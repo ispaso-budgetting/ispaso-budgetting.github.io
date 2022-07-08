@@ -1,34 +1,15 @@
+import getMonths from './getMonths.js';
 import calculateIncome, { frozenIncome, freeIncome } from '../income/index.js';
 import calculateExpenditure, { totalExpenditure } from '../expenditure/index.js';
-import store from '../store/index.js';
 
 export let total = {income: 0, expenditure: 0};
 
-export function monthly(timePeriod = 'monthly') {
-    const budgetPeriod = store.get('budgetPeriod');
-    // console.log(budgetPeriod);
-    const semester = budgetPeriod.split('.')[0];
-    const year = budgetPeriod.split('.')[1];
-
-    console.log('semester:', semester);
-    let start = new Date(), end = new Date();
-
-    if(semester == 'spring') {
-        start = 'Jan 1, ' + year; // Jan 1 - July 31
-        end = 'July 31, ' + year;
-    } else {
-        start = 'August 1 ' + year; // Aug - Dec
-        end = 'December 31 ' + year;
-    }
-
-    start = new Date(start + ' UTC');
-    end = new Date(end + ' UTC');
-
+export function monthly(start, end, timePeriod = 'monthly') {
     const countSemesters = 1;
     calculateIncome(start, end, countSemesters);
-    calculateExpenditure(start, end, countSemesters);
+    // calculateExpenditure(start, end, countSemesters);
 
-    const months = ['June', 'July', 'August'];
+    const months = getMonths(start, end);
     const monthly = [];
 
     const income = freeIncome;
