@@ -1,7 +1,7 @@
 import Vuex from '../vuex4.js'
 
 import calcAgeBracket from '../utils/ageBracket.js';
-import { save as saveData, retrieve as retrieveData, reset as resetData } from './localStorage.js';
+import { save as saveData } from './localStorage.js';
 import getDefaultValues from './defaultValues.js';
 
 let getters = {}, mutations = {};
@@ -9,9 +9,10 @@ let getters = {}, mutations = {};
 (() => {
     const defaultValues = getDefaultValues();
     for(const key in defaultValues) {
-        getters[key] = (state) => state[key] || defaultValues[key]
+        getters[key] = (state) => (state[key] != null) ? state[key] : defaultValues[key]
+
         mutations[key] = (state, payload) => {
-            if(payload)
+            if(payload != null)
                 state[key] = payload
         }
     }
@@ -93,15 +94,6 @@ const store = Vuex.createStore({
                 saveData(key, state[key]);
             }
         },
-
-        loadState({ state,  commit }) {
-            const defaultValues = getDefaultValues();
-            for(const key in defaultValues) {
-                const data = retrieveData(key);
-
-                commit(key, data);
-            }
-        }
     }
 });
 

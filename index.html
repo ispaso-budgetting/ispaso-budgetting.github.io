@@ -95,6 +95,9 @@
           <label><input type='radio' value='1' v-model='usePrinInsurance' />Yes</label>
           <label><input type='radio' value='0' v-model='usePrinInsurance' />No</label>
 
+          <!--
+            {{ usePrinInsurance }}
+          -->
           <label v-if='usePrinInsurance == 0'>How much does your insurance cost yearly?
             <input type='number' v-model='customInsurance' />
           </label>
@@ -181,11 +184,11 @@
 
             watch: {
               academicSession(newVal) {
-                store.save('academicSession', newVal);
+                store.set('academicSession', newVal);
                 this.holidayWork = store.get('holidayWork');
               },
               semesters(newVal) {
-                store.save('semesters', newVal);
+                store.set('semesters', newVal);
                 this.holidayWork = store.get('holidayWork');
               },
             },

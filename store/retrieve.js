@@ -73,14 +73,9 @@ export function retrieve(key) {
                 (typeof value == 'object' && Object.keys(value).length == 0))
                 value = { fall:{}, spring: {} };
 
-            else if(typeof value == 'object') {
-                console.log('value:', value);
-            }
-            console.log('begteif', value);
 
             const sems = sessions[academicSession()];
             Object.keys(value).forEach(semID => {
-                console.log('sem id:', semID);
                 value[semID].name = sems[semID].name;
             });
 
