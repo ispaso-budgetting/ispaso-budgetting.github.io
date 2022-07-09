@@ -87,42 +87,10 @@
           <legend>Expenditure</legend>
           </p>For now, we're going to focus on your PrinBill. You can add other expenditures later. This section is to calculate your PrinBill</p>
 
-          <!--
-          <h6>Tax</h6>
-          <label>
-            Have you been in the US for at least 5 years?
-
-            <label><input type='radio' value=1 v-model='isResident' />Yes</label>
-            <label><input type='radio' value=0 v-model='isResident' />No</label>
-          </label>
-
-          <div v-if='isResident == 0'>
-            <label>Country of Citizenship</label>
-            <select v-model='cocz'>
-              <option v-for='country in countries' :value='country.code'>{{ country.name }}</option>
-            </select>
-          </div>
-          -->
-
           <h6>Insurance</h6>
           <label>Did you waive your insurance?</label>
           <label><input type='radio' value=1 v-model='waivedInsurance' />Yes</label>
           <label><input type='radio' value=0 v-model='waivedInsurance' />No</label>
-
-          <!--
-            <h6>Age</h6>
-            <label v-if='!noDOB'>Date of Birth
-            <input type='date' :max='maxDOB' v-model='birthdate'>
-            </label>
-            <label>I don't want to enter my date of birth <input type='checkbox' v-model='noDOB' /></label>
-
-            <div v-if='noDOB'>
-            <p>Choose the bracket you fall in.</p>
-            <label><input type='radio' value='a' v-model='ageBracket' name='ageBracket' /> Under 25</label>
-            <label><input type='radio' value='b' v-model='ageBracket' name='ageBracket' /> 25 - 29</label>
-            <label><input type='radio' value='c' v-model='ageBracket' name='ageBracket' /> 30+</label>
-            </div>
-          -->
 
           <h6>Other Expenses</h6>
           <h6>Break Housing</h6>
@@ -183,7 +151,6 @@
                     incomeTax: null,
                     showAdvancedIncome: false,
                     waivedInsurance: null,
-                    isResident: null,
                     cocz: null,
                     countries: countries,
                     birthdate: null,
