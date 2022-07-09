@@ -26,6 +26,7 @@ export default function(start, end, semesters) {
     totalExpenditure += miscPrin(sessions);
 
     totalExpenditure += tax(finAid(), totalExpenditure);
+    // TODO: if using prin insurance, calculate insurance, else get insrance from store
     totalExpenditure += insurance(store.getters.birthdate, store.getters.ageBracket, months);
 
     /*

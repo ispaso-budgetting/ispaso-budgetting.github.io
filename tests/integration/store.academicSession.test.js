@@ -27,7 +27,8 @@ describe('App store: Academic session and semesters', function() {
         expect(store.get('semesters').spring).to.have.property('name', 'Spring 2023');
     });
 
-    it('setter: set semesters([arr])', function() {
+    // TODO: finish test
+    it.skip('setter: If semester does not exist in semester master, ignore. Dont throw', function() {
         store.set('semesters', ['spring', 'fall', 'summer']);
         expect(vuexStore.state.semesters)
             .to.have.keys('fall', 'spring', 'summer');
@@ -36,6 +37,17 @@ describe('App store: Academic session and semesters', function() {
             .to.have.members(['fall', 'spring', 'summer']);
         expect(store.get('semesters'))
             .to.have.keys('fall', 'spring', 'summer');
+    });
+
+    it('setter: set semesters([arr])', function() {
+        store.set('semesters', ['spring', 'fall']);
+        expect(vuexStore.state.semesters)
+            .to.have.keys('fall', 'spring');
+
+        expect(store.get('semesterArr'))
+            .to.have.members(['fall', 'spring']);
+        expect(store.get('semesters'))
+            .to.have.keys('fall', 'spring');
     });
 
     it('setter: set semesters({sema: {...}, semb: {...},...})', function() {

@@ -7,6 +7,9 @@ export default function() {
         hourlyWage: 12,
         incomeTax: 30,
 
+        usePrinInsurance: 1,
+        customInsurance: 0,
+
         holidays: {
             work: {},
             breakHousing: {}

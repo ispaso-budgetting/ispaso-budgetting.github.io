@@ -91,9 +91,13 @@
           </p>For now, we're going to focus on your PrinBill. You can add other expenditures later. This section is to calculate your PrinBill</p>
 
           <h6>Insurance</h6>
-          <label>Did you waive your insurance?</label>
-          <label><input type='radio' value=1 v-model='waivedInsurance' />Yes</label>
-          <label><input type='radio' value=0 v-model='waivedInsurance' />No</label>
+          <label>Will you be using the Health Insurance provided through Principia?</label>
+          <label><input type='radio' value='1' v-model='usePrinInsurance' />Yes</label>
+          <label><input type='radio' value='0' v-model='usePrinInsurance' />No</label>
+
+          <label v-if='usePrinInsurance == 0'>How much does your insurance cost yearly?
+            <input type='number' v-model='customInsurance' />
+          </label>
 
           <h6>Other Expenses</h6>
           <h6>Break Housing</h6>
@@ -164,7 +168,8 @@
                     breakHousing: null,
                     incomeTax: null,
                     showAdvancedIncome: false,
-                    waivedInsurance: null,
+                    usePrinInsurance: null,
+                    customInsurance: 0,
                     cocz: null,
                     countries: countries,
                     birthdate: null,
@@ -209,6 +214,7 @@
                   birthdate, extraExpenditure, extraIncome,
                   academicSession, semesters,
                   breakHousing,
+                  usePrinInsurance, customInsurance,
                 } = this;
 
                 store.save({
@@ -219,6 +225,7 @@
                   hourlyWage, incomeTax,
                   academicSession, semesters,
                   breakHousing,
+                  usePrinInsurance, customInsurance,
                 });
 
                 if(this.noDOB)
@@ -236,6 +243,8 @@
             mounted() {
               this.fetchHolidaysFromStore();
 
+              this.customInsurance = store.get("customInsurance");
+              this.usePrinInsurance = store.get("usePrinInsurance");
               this.finAid = store.get("finAid");
               this.extraIncome = store.get("extraIncome");
               this.extraExpenditure = store.get("extraExpenditure");
