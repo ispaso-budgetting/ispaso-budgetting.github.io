@@ -30,6 +30,11 @@ getters.breakWorkHours = (state) => state.weeklyHours.breaks;
 getters.sessionWorkHours = (state) => parseFloat(state.sessionHoursPerWeek);
 getters.hourlyWage = (state) => parseFloat(state.hourlyWage);
 
+getters.breakHousing = (state) => state.holidays.breakHousing;
+mutations.breakHousing = function(state, payload) {
+    state.holidays.breakHousing = payload;
+}
+
 mutations.holidayWorkHours = function(state, payload) {
     const h = state.holidayWork[payload.key];
     if(h)

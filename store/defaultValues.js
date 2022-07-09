@@ -7,7 +7,10 @@ export default function() {
         hourlyWage: 12,
         incomeTax: 30,
 
-        holidays: [],
+        holidays: {
+            work: {},
+            breakHousing: {}
+        },
 
         holidayWork: {},
 
@@ -23,8 +26,8 @@ export default function() {
             {name: 'Outings', date: new Date(), amount: null},
         ],
 
-        budgetPeriod: 'spring.22',
-        budgetPeriodNew: ['spring.22'],
+        // budgetPeriod: 'spring.22',
+        // budgetPeriodNew: ['spring.22'],
         finAid: null,
         gradDate: {month: null, year: null},
 

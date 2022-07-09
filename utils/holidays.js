@@ -19,7 +19,7 @@ export function checkKeyIfHoliday(key) {
     else return false;
 }
 
-export function defaultHolidayWork(start, end) {
+function returnCurrentHolidays(start, end) {
     if(!(start instanceof Date))
         start = new Date(start);
     if(!(end instanceof Date))
@@ -40,6 +40,45 @@ export function defaultHolidayWork(start, end) {
                 hoursPerWeek: 40,
                 maxWeeks
             }
+        }
+    }
+
+    return result;
+}
+
+export function breakHousing(start, end) {
+    const result = returnCurrentHolidays(start, end);
+
+    for(let key in result) {
+        const h = holidayObjs[key];
+
+        const hStart = luxon.DateTime.fromISO(new Date(h.start).toISOString());
+        const hEnd = luxon.DateTime.fromISO(new Date(h.end).toISOString());
+
+        const maxNights = hEnd.diff(hStart, 'days').toObject().days;
+        result[key] = {
+            ...h,
+            maxNights
+        }
+    }
+
+    return result;
+}
+
+export function defaultHolidayWork(start, end) {
+    const result = returnCurrentHolidays(start, end);
+
+    for(let key in result) {
+        const h = holidayObjs[key];
+
+        const hStart = luxon.DateTime.fromISO(new Date(h.start).toISOString());
+        const hEnd = luxon.DateTime.fromISO(new Date(h.end).toISOString());
+
+        const maxWeeks = hEnd.diff(hStart, 'weeks').toObject().weeks;
+        result[key] = {
+            ...h,
+            hoursPerWeek: 40,
+            maxWeeks
         }
     }
 
