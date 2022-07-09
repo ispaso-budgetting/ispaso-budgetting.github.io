@@ -39,7 +39,7 @@ function setKeyValue(key, value, value1) {
             const defaultBreakHousing = breakHousing(today(), end);
             if(typeof value == 'object') {
                 for(let holidayID in value) {
-                    const h = defaultBreakHousing[holidayID];
+                    const h = {...defaultBreakHousing[holidayID]};
                     const maxNights = h.maxNights;
 
                     const nights = value[holidayID].nights;
@@ -58,6 +58,20 @@ function setKeyValue(key, value, value1) {
                     vuexStore.commit('breakHousing', value);
                 }
             }
+            break;
+
+        case 'semesters':
+            if(Array.isArray(value)) {
+                const commitObj = {};
+                value.forEach(semID => {
+                    commitObj[semID] = {};
+                });
+
+                vuexStore.commit('semesters', commitObj);
+            } else if(typeof value == 'object') {
+                vuexStore.commit('semesters', value);
+            }
+            break;
         default:
             vuexStore.commit(key, value);
             break;

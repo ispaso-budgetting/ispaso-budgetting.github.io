@@ -9,6 +9,8 @@ describe('App store: Holiday Work', function() {
         store.set('semesters', ['spring']);
     });
 
+    it('When saving holiday work, save even for holidays that are not part of session');
+
     it('Set and retrieve hoursPerWeek for holidays', function() {
         store.set('hoursPerWeek', 'winter.22', 14);
         const holidayWork = store.get('holidayWork');

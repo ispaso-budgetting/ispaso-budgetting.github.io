@@ -5,7 +5,7 @@ import vuexStore from './vuex.js';
 export function endSemesterDate() {
     const sessionID = vuexStore.getters.academicSession;
     const session = (sessionID) ? sessions[sessionID] : Object.values(sessions)[0];
-    const storedSemesters = vuexStore.getters.semesters;
+    const storedSemesters = Object.keys(vuexStore.getters.semesters);
 
     const endSemesterName = storedSemesters.includes('spring') ? 'spring' : 'fall';
     const endSemester = session[endSemesterName];

@@ -17,13 +17,13 @@
           <div v-for = '(session, key) in academicSessions'>
             <label>
               <input type='radio' :value='key' v-model='academicSession'
-                @click='semesters = Object.keys(session).map(a => a)'/>
+                @click='semesterArr = Object.keys(session).map(a => a)'/>
 
               20{{ key.substring(0,2) }} - 20{{ key.substring(3) }}
 
               <div v-if='academicSession == key'>
                 <label v-for='(period, name) in session' style='padding-left: 2rem'>
-                  <input type='checkbox' :value='name' v-model='semesters' />
+                  <input type='checkbox' :value='name' v-model='semesterArr' />
                   {{ period.name }}
                 </label>
               </div>
@@ -33,6 +33,7 @@
           <!--
           <p>Academic Session: {{ academicSession }}</p>
           <p>Semesters: {{ semesters }}</p>
+          <p>Semesters: {{ semesterArr }}</p>
           -->
         </fieldset>
 
@@ -41,13 +42,16 @@
           <label>Financial Aid: <input type = 'number' v-model='finAid' placeholder = '$xx,xxx.xx' /></label>
 
           <h4>Student Employment</h4>
-          <label>Hourly wage
-            <input type='number' placeholder='12.5' v-model='hourlyWage' />
-          </label>
+          <div v-for='sem in semesters'>
+            <h6>{{ sem.name }}</h6>
+            <label>How many hours per week will you be working on campus during {{ sem.name }}
+              <input type='number' placeholder='12.5' step='0.1' v-model='sem.hoursPerWeek' />
+            </label>
 
-          <label>Projected Weekly Hours in session
-            <input type='number' placeholder='20' max=20  v-model='sessionHours'/>
-          </label>
+            <label>Estimate your hourly wage in this session
+              <input type='number' placeholder='20' step='0.1' v-model='sem.hourlyWage'/>
+            </label>
+          </div>
 
           <div v-for='h in holidayWork'>
             <h6>{{ h.name }}</h6>
@@ -59,7 +63,7 @@
 
             <label>
               How many weeks will you work on campus during {{h.name}}?
-              <input class='block' type='number' v-model='h.weeksAvailable' />
+              <input class='block' type='text' v-model='h.weeksAvailable' />
               <span @click='h.weeksAvailable = "100%"'>Max: {{ formatTime(h.maxWeeks, 'weeks') }}</span>
             </label>
           </div>
@@ -140,7 +144,8 @@
                 return {
                     academicSessions,
                     academicSession: null,
-                    semesters: [],
+                    semesters: {},
+                    semesterArr: [],
 
                     gradYears: [],
                     gradMonth: null,
@@ -241,6 +246,7 @@
               this.incomeTax = store.get("incomeTax");
               this.academicSession = store.get("academicSession");
               this.semesters = store.get("semesters");
+              this.semesterArr = store.get("semesterArr");
 
               this.breakHousing = store.get('breakHousing');
             }

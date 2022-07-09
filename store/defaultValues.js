@@ -12,8 +12,6 @@ export default function() {
             breakHousing: {}
         },
 
-        holidayWork: {},
-
         extraIncome: [
             {name: 'Family', date: new Date(), amount: 2000},
             {name: 'Stipends', date: new Date(), amount: 100},
@@ -32,6 +30,6 @@ export default function() {
         gradDate: {month: null, year: null},
 
         academicSession: null,
-        semesters: []
+        semesters: {}
     }
 }

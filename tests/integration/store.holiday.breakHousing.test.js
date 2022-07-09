@@ -8,6 +8,8 @@ describe('App store: Break Housing', function() {
         store.set('semesters', ['spring']);
     });
 
+    it('When saving holiday work, save even for holidays that are not part of session');
+
     it('Set and retrieve nights in break housing', function() {
         store.set('breakHousing', {'winter.22': {nights: 14}}); // nights for winter.22
         const breakHousing = store.get('breakHousing');

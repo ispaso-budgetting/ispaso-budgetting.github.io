@@ -36,22 +36,22 @@ mutations.breakHousing = function(state, payload) {
 }
 
 mutations.holidayWorkHours = function(state, payload) {
-    const h = state.holidayWork[payload.key];
+    const h = state.holidays.work[payload.key];
     if(h)
         h.hoursPerWeek = payload.value;
     else {
-        state.holidayWork[payload.key] = {
+        state.holidays.work[payload.key] = {
             hoursPerWeek: payload.value
         }
     }
 }
 
 mutations.holidayWorkWeeksAvailable = function(state, payload) {
-    const h = state.holidayWork[payload.key];
+    const h = state.holidays.work[payload.key];
     if(h)
         h.weeksAvailable = payload.value;
     else {
-        state.holidayWork[payload.key] = {
+        state.holidays.work[payload.key] = {
             weeksAvailable: payload.value
         }
     }

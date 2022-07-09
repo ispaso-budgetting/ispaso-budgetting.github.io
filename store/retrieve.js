@@ -8,6 +8,15 @@ import { endSemesterDate } from './calculations.js';
 
 import "/globals.js";
 
+function academicSession() {
+    let value = vuexStore.getters.academicSession;
+    if(value == null) {
+        value = '22/23';
+    }
+
+    return value;
+}
+
 export function retrieve(key) {
     loadState();
     let value;
@@ -20,7 +29,7 @@ export function retrieve(key) {
 
             value = {};
 
-            const userDefinedHolidays = {...vuexStore.getters.holidayWork};
+            const userDefinedHolidays = {...vuexStore.getters.holidays.work};
 
             for(let h in defaultHolidays) {
                 const uh = userDefinedHolidays[h];
@@ -53,22 +62,30 @@ export function retrieve(key) {
             break;
 
         case 'academicSession':
-            value = vuexStore.getters[key];
-            if(value == null) {
-                value = '22/23';
-            }
+            value = academicSession();
             break;
 
         case 'semesters':
-            value = vuexStore.getters[key];
-            if(value == null)
-                value = [];
-            if(!Array.isArray(value))
-                value = [value];
+        case 'semesterArr':
+            value = vuexStore.getters.semesters;
 
-            if(value.length ==0) {
-                value = ['fall', 'spring'];
+            if(value == null ||
+                (typeof value == 'object' && Object.keys(value).length == 0))
+                value = { fall:{}, spring: {} };
+
+            else if(typeof value == 'object') {
+                console.log('value:', value);
             }
+            console.log('begteif', value);
+
+            const sems = sessions[academicSession()];
+            Object.keys(value).forEach(semID => {
+                console.log('sem id:', semID);
+                value[semID].name = sems[semID].name;
+            });
+
+            if(key == 'semesterArr')
+                return Object.keys(value);
             break;
 
         default:
