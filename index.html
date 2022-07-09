@@ -213,7 +213,8 @@
                     gradDate, finAid, ageBracket,
                     sessionHours, breakHours, 
                     budgetPeriod, hourlyWage, incomeTax,
-                    birthdate, extraExpenditure, extraIncome
+                    birthdate, extraExpenditure, extraIncome,
+                    academicSession, semesters,
                   } = this;
 
                   store.save({
@@ -222,6 +223,7 @@
                     gradDate, finAid, ageBracket,
                     sessionHoursPerWeek: sessionHours,
                     budgetPeriod, hourlyWage, incomeTax,
+                    academicSession, semesters,
                   });
 
                     if(this.noDOB)
@@ -247,6 +249,8 @@
 
                 this.sessionHours = store.get("sessionHoursPerWeek");
                 this.incomeTax = store.get("incomeTax");
+                this.academicSession = store.get("academicSession");
+                this.semesters = store.get("semesters");
             }
         });
 

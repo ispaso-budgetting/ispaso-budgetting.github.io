@@ -27,5 +27,8 @@ export default function() {
         budgetPeriodNew: ['spring.22'],
         finAid: null,
         gradDate: {month: null, year: null},
+
+        academicSession: null,
+        semesters: []
     }
 }
