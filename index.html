@@ -49,19 +49,18 @@
             <input type='number' placeholder='20' max=20  v-model='sessionHours'/>
           </label>
 
-          <h5>How will you work during the holidays</h5>
-
           <div v-for='h in holidayWork'>
             <h6>{{ h.name }}</h6>
 
             <label>
               How many hours per week will you be working on campus during {{h.name}}?
-              <input class='block' type='number' v-model='h.hoursPerWeek' />
+              <input class='block' type='number' v-model='h.hoursPerWeek' /> 
             </label>
 
             <label>
               How many weeks will you work on campus during {{h.name}}?
               <input class='block' type='number' v-model='h.weeksAvailable' />
+              <span @click='h.weeksAvailable = "100%"'>Max: {{ formatTime(h.maxWeeks, 'weeks') }}</span>
             </label>
           </div>
 
@@ -103,7 +102,7 @@
                 How many nights will you be staying in break housing during {{ holiday.name }}
               </span>
               <input type='number' v-model='holiday.nights' :max='holiday.maxNights' />
-              <span>Max: {{holiday.maxNights}} nights</span>
+              <span @click='holiday.nights = holiday.maxNights'>Max: {{ formatTime(holiday.maxNights, 'nights') }}</span>
             </label>
           </div>
 
@@ -134,6 +133,7 @@
         import defaultHolidayWork from '/utils/holidays.js';
         import store from './store/index.js';
         import { sessions as academicSessions } from '/utils/semesters.js';
+        import { formatTime } from '/utils/index.js';
 
         const app = Vue.createApp({
             data() {
@@ -181,6 +181,7 @@
             },
 
             methods: {
+              formatTime,
               addExtraIncome() {
                   var today = new Date().toISOString().slice(0, 10);
 
