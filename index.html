@@ -15,7 +15,7 @@
           <legend>Hi. Nice to meet you</legend>
           <p>What academic periods are you budgeting for?</p>
           <div v-for = '(session, key) in academicSessions'>
-            <label>
+            <label v-if='key=="22/23"'>
               <input type='radio' :value='key' v-model='academicSession'
                 @click='semesterArr = Object.keys(session).map(a => a)'/>
 
@@ -44,12 +44,25 @@
           <h4>Student Employment</h4>
           <div v-for='sem in semesters'>
             <h6>{{ sem.name }}</h6>
-            <label>How many hours per week will you be working on campus during {{ sem.name }}
-              <input type='number' placeholder='12.5' step='0.1' v-model='sem.hoursPerWeek' />
+            <label>
+              <span class='input-group__label'>
+                How many hours per week will you be working on campus during {{ sem.name }}
+              </span>
+              <input class='input-group__control' type='number' placeholder='12.5' step='0.1' v-model='sem.hoursPerWeek' />
             </label>
 
-            <label>Estimate your hourly wage in this session
-              <input type='number' placeholder='20' step='0.1' v-model='sem.hourlyWage'/>
+            <label>
+              <span class='input-group__label'>
+                How many weeks will you be working on campus during {{ sem.name }}
+              </span>
+              <input class='input-group__control' type='number' placeholder='12.5' step='0.1' v-model='sem.hoursPerWeek' />
+            </label>
+
+            <label>
+              <span class='input-group__label'>
+                Estimate your hourly wage in this session
+              </span>
+              <input class='input-group__control' type='number' placeholder='20' step='0.1' v-model='sem.hourlyWage'/>
             </label>
           </div>
 
@@ -61,10 +74,31 @@
               <input class='block' type='number' v-model='h.hoursPerWeek' /> 
             </label>
 
-            <label>
-              How many weeks will you work on campus during {{h.name}}?
-              <input class='block' type='text' v-model='h.weeksAvailable' />
-              <span @click='h.weeksAvailable = "100%"'>Max: {{ formatTime(h.maxWeeks, 'weeks') }}</span>
+            <div class='input-group' v-if='h.maxWeeks < 2'>
+              Will you be working on campus during {{h.name}}?
+              <label>
+                <input class='input-group__radio' type='radio' value=1 v-model='h.weeksAvailable' />
+                <span class='input-group__label'>Yes</span>
+              </label>
+              <label>
+                <input class='input-group__radio' type='radio' value=0 v-model='h.weeksAvailable' />
+                <span class='input-group__label'>No</span>
+              </label>
+            </div>
+
+            <label class='input-group' v-else>
+              <span class='input-group__label'>
+                How many weeks will you work on campus during {{h.name}}?
+              </span>
+              <input class='block input-group__control' type='text' v-model='h.weeksAvailable' />
+              <span class='input-group__help' @click='h.weeksAvailable = "100%"'>Max: {{ formatTime(h.maxWeeks, 'weeks') }}</span>
+            </label>
+
+            <label class='input-group'>
+              <span class='input-group__label'>
+                Estimate your hourly wage in {{h.name}}
+              </span>
+              <input class='input-group__control' type='number' placeholder='20' step='0.1' v-model='h.hourlyWage'/>
             </label>
           </div>
 
