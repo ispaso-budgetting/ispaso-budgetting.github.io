@@ -1,6 +1,6 @@
 import studentEmployment from '../../income/studentEmployment.js';
 
-describe('Income: Student Employment', function() {
+describe.skip('Income: Student Employment', function() {
     let sessionHourlyWage = 12;
     let sessionHoursPerWeek = 20;
     let incomeTax = 30;

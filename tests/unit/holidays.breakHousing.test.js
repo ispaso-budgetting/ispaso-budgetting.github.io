@@ -9,7 +9,7 @@ describe('Break housing: Unit tests', function() {
 
         // expect(res).to.have.keys('winter.22', 'sb.23');
 
-        expect(res['winter.22']).to.have.property('maxNights', 32);
+        expect(res['winter.22']).to.have.property('maxNights', 35);
         expect(res['sb.23']).to.have.property('maxNights', 7);
     });
 });

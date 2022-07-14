@@ -22,7 +22,7 @@ describe('Holiday work hours: Unit tests', function() {
 
         // expect(res).to.have.keys('winter.22', 'sb.23');
 
-        expect(res['winter.22']).to.have.property('maxWeeks', (4 + (4/7)));
+        expect(res['winter.22']).to.have.property('maxWeeks', 5);
         expect(res['sb.23']).to.have.property('maxWeeks', 1);
     });
 });

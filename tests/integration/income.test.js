@@ -1,7 +1,7 @@
 import store from '../../store/index.js';
 import income, {freeIncome} from '../../income/index.js';
 
-describe('Income', function() {
+describe.skip('Income', function() {
     const incomeTax = 30;
 
     const hourlyWage=12, sessionHoursPerWeek = 15;
