@@ -1,0 +1,6 @@
+{
+  "devDependencies": {
+    "proxyquireify": "^3.2.1",
+    "sinon": "^14.0.0"
+  }
+}

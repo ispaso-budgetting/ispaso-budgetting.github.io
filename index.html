@@ -173,12 +173,21 @@
       </form>
     </div>
 
+    <script type='importmap'>
+      {
+        "imports": {
+          "store": "./store/index.js"
+        }
+      }
+    </script>
+
     <script type='module'>
         import countries from './utils/countries.js';
         import defaultHolidayWork from '/utils/holidays.js';
         import store from './store/index.js';
         import { sessions as academicSessions } from '/utils/semesters.js';
         import { formatTime } from '/utils/index.js';
+        import { getAllBreakHousing, setBreakHousing } from '/expenditure/breakHousing.js';
 
         const app = Vue.createApp({
             data() {
@@ -254,6 +263,8 @@
                   usePrinInsurance, customInsurance,
                 } = this;
 
+                setBreakHousing(breakHousing);
+
                 store.save({
                   birthdate,
                   extraIncome, extraExpenditure,
@@ -261,7 +272,6 @@
                   sessionHoursPerWeek: sessionHours,
                   hourlyWage, incomeTax,
                   academicSession, semesters,
-                  breakHousing,
                   usePrinInsurance, customInsurance,
                 });
 
@@ -294,7 +304,8 @@
               this.semesters = store.get("semesters");
               this.semesterArr = store.get("semesterArr");
 
-              this.breakHousing = store.get('breakHousing');
+              this.breakHousing = getAllBreakHousing();
+              // this.breakHousing = store.get('breakHousing');
             }
         });
 

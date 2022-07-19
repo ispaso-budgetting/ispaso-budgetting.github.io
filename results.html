@@ -1,49 +1,54 @@
 <!DOCTYPE html>
 <head>
-    <title>Budget - Principia Budgeting Tool | ISPASO</title>
-    <link rel='stylesheet' href='income_form.css'></link>
-    <link rel='stylesheet' href='results.css'></link>
-    <script src="vue3.global.js"></script>
+  <title>Budget - Principia Budgeting Tool | ISPASO</title>
+  <link rel='stylesheet' href='income_form.css'></link>
+  <link rel='stylesheet' href='results.css'></link>
+  <script src="vue3.global.js"></script>
 </head>
 
 <body>
-    <div id='app'>
-        <h1>Budget for {{ budgetTitle }}</h1>
-        <table>
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>Expenses</th>
-                    <th>Income</th>
-                </tr>
-            </thead>
-            <tbody>
-            <!-- <tr v-for='data in budget'> -->
-                <tr v-for='data in budgetData'>
-                    <td>{{ data.name }}</td>
-                    <td>{{ data.expenditure }}</td>
-                    <td>{{ data.income }}</td>
-                    <td :class='{negative: data.diff < 0, positive: data.diff > 0}'>
-                        {{ data.diff }}
-                    </td>
-                </tr>
-            </tbody>
-
-            <thead>
-                <tr>
-                    <th>Total</th>
-                    <th>{{ totalBudget.expenditure }}</th>
-                    <th>{{ totalBudget.income }}</th>
-                    <th :class='{negative: totalBudget.diff < 0, positive: totalBudget.diff > 0}'>
-                        {{ totalBudget.diff }}
-                    </th>
-                </tr>
-            </thead>
-        </table>
+  <div id='app'>
+    <div>
+    <h1>Suggested Prinbill Payment Plan</h1>
+    <p><b>DISCLAIMER:</b> This is for planning purposes only based on your estimated Prinbill. Please refer to your Prinbill account for exact Prinbill balances.
+    </p>
     </div>
+    <h1>Budget for {{ budgetTitle }}</h1>
+    <table>
+      <thead>
+        <tr>
+          <th></th>
+          <th>Expenses</th>
+          <th>Income</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- <tr v-for='data in budget'> -->
+        <tr v-for='data in budgetData'>
+          <td>{{ data.name }}</td>
+          <td>{{ data.expenditure }}</td>
+          <td>{{ data.income }}</td>
+          <td :class='{negative: data.diff < 0, positive: data.diff > 0}'>
+            {{ data.diff }}
+          </td>
+        </tr>
+      </tbody>
 
-    <script type='module'>
-        import store from './store/index.js';
+      <thead>
+        <tr>
+          <th>Total</th>
+          <th>{{ totalBudget.expenditure }}</th>
+          <th>{{ totalBudget.income }}</th>
+          <th :class='{negative: totalBudget.diff < 0, positive: totalBudget.diff > 0}'>
+            {{ totalBudget.diff }}
+          </th>
+        </tr>
+      </thead>
+    </table>
+  </div>
+
+  <script type='module'>
+    import store from './store/index.js';
         import { budgetTitle, calculateBudget, totalBudget, monthlyBudget } from './budget/index.js';
 
         const app = Vue.createApp({
@@ -74,7 +79,7 @@
 
         app.use(store);
         app.mount('#app');
-    </script>
+  </script>
 </body>
 </html>
 

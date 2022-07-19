@@ -1,0 +1,1 @@
+export const BREAK_HOUSING_COST_PER_NIGHT = 7; 

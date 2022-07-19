@@ -2,8 +2,8 @@ import vuexStore from './vuex.js';
 import defaultValues from './defaultValues.js';
 
 import {loadState} from './utils.js';
-import {defaultHolidayWork, breakHousing, checkKeyIfHoliday} from '/utils/holidays.js';
-import { semesters, sessions } from '/utils/semesters.js';
+import {defaultHolidayWork, checkKeyIfHoliday} from '/utils/holidays.js';
+import { budgetPeriods, semesters, sessions } from '/utils/semesters.js';
 import { endSemesterDate } from './calculations.js';
 
 import "/globals.js";
@@ -34,24 +34,6 @@ export function retrieve(key) {
             for(let h in defaultHolidays) {
                 const uh = userDefinedHolidays[h];
                 value[h] = defaultHolidays[h];
-                if(uh) {
-                    value[h] = {
-                        ...value[h],
-                        ...uh
-                    }
-                }
-            }
-            break;
-
-        case 'breakHousing':
-            const breakHousingDefaults = breakHousing(today(), end);
-            value = vuexStore.getters.holidays.breakHousing;
-
-            const userBreakHousing = {...vuexStore.getters.breakHousing};
-
-            for(let h in breakHousingDefaults) {
-                const uh = userBreakHousing[h];
-                value[h] = breakHousingDefaults[h];
                 if(uh) {
                     value[h] = {
                         ...value[h],

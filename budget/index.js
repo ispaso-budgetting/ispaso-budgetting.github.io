@@ -1,40 +1,21 @@
-import periods from './periods.js';
-import store from '../store/index.js';
-import { total, monthly } from './calculate.js';
+import store from 'store';
 
-export const budgetPeriods = periods;
+/*
+ * Returns the end date of the current budgetting period set by student
+ */
+export const budgettingPeriod = {
+    endDate() {
+        const sessionID = store.get('budgetPeriod');
+        const session = (sessionID) ? sessions[sessionID] : Object.values(sessions)[0];
+        const storedSemesters = Object.keys(vuexStore.getters.semesters);
+        const endSemesterName = storedSemesters.includes('spring') ? 'spring' : 'fall';
+        // const endSemester = session[endSemesterName];
+        const endSemester = session[endSemesterName];
+        // console.log('end semester:', endSemester, 'sem name:', endSemesterName, budgetPeriods, sessions);
 
-export const totalBudget = total;
+        const end = new Date(endSemester.end);
+        // console.log('end:', end);
 
-export let monthlyBudget;
-
-export let budgetTitle;
-
-export function calculateBudget(timePeriod = 'monthly') {
-    const budgetPeriod = store.get('budgetPeriod');
-    // console.log(budgetPeriod);
-    const semester = budgetPeriod.split('.')[0];
-
-    const splits = budgetPeriod.split('.');
-    let season = splits[0], year = splits[1]
-
-    console.log('semester:', semester);
-    let start = new Date(), end = new Date();
-
-    if(semester == 'spring') {
-        start = 'Jan 1, ' + year; // Jan 1 - July 31
-        end = 'July 31, ' + year;
-    } else {
-        start = 'August 1 ' + year; // Aug - Dec
-        end = 'December 31 ' + year;
+        return end;
     }
-
-    start = new Date(start + ' UTC');
-    end = new Date(end + ' UTC');
-
-    budgetTitle = season.charAt(0).toUpperCase() + season.slice(1);
-    budgetTitle += ' ' + '20' + year;
-
-    if(timePeriod == 'monthly')
-        monthlyBudget = monthly(start, end);
 }

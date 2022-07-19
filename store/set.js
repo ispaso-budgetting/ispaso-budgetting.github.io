@@ -35,31 +35,6 @@ function setKeyValue(key, value, value1) {
 
             break;
 
-        case 'breakHousing':
-            const defaultBreakHousing = breakHousing(today(), end);
-            if(typeof value == 'object') {
-                for(let holidayID in value) {
-                    const h = {...defaultBreakHousing[holidayID]};
-                    const maxNights = h.maxNights;
-
-                    const nights = value[holidayID].nights;
-
-                    if(!isNaN(nights) && nights > maxNights)
-                        value[holidayID].nights = h.maxNights;
-
-                    if(/^\d+\.?\d+%/.test(nights)) {
-                        const nightsPercentFloat = parseFloat(nights);
-
-                        if(nightsPercentFloat >= 100)
-                            value[holidayID].nights = h.maxNights;
-                        else value[holidayID].nights = nightsPercentFloat / 100 * h.maxNights;
-                    }
-
-                    vuexStore.commit('breakHousing', value);
-                }
-            }
-            break;
-
         case 'semesters':
             if(Array.isArray(value)) {
                 const commitObj = {};

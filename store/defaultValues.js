@@ -27,12 +27,17 @@ export default function() {
             {name: 'Outings', date: new Date(), amount: null},
         ],
 
-        // budgetPeriod: 'spring.22',
-        // budgetPeriodNew: ['spring.22'],
         finAid: null,
         gradDate: {month: null, year: null},
 
         academicSession: null,
-        semesters: {}
+        semesters: {},
+
+        breakHousing: {},
+
+        budgetPeriod: {
+            session: "22/23",
+            semesters: ['fall', 'spring']
+        },
     }
 }
