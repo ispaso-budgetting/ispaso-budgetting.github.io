@@ -11,7 +11,8 @@ beforeEach(() => {
     store._reset()
 });
 
-import './income.test.js';
+import './prinbill.budget.js';
+import './budgetPeriod.test.js';
 import './store.academicSession.test.js';
 import './store.holiday.test.js';
 import './store.holiday.work.test.js';

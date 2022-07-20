@@ -1,11 +1,21 @@
 import studentEmployment from '../../income/studentEmployment.js';
+import store from '../stubs/store.js';
 
-describe.skip('Income: Student Employment', function() {
+describe('Income: Student Employment', function() {
     let sessionHourlyWage = 12;
     let sessionHoursPerWeek = 20;
     let incomeTax = 30;
 
     it('Return earnings for a month', function() {
+        store.get = (name) => {
+            return (name == 'budgetPeriod') ? { session: "22/23", semesters: ['fall', 'spring']} :
+                (name == 'sessionHourlyWage') ? 15:
+                (name == 'sessionHoursPerWeek') ? 15:
+                (name == 'incomeTax') ? 30:
+                (name == 'holidayWork') ? {'summer.22': {hours:40, weeks:85, wage:12}}:
+                null
+        }
+
         let cases = [{
             monthVar: ['oct', 'october'], // 31 days in session
             expectedTotal: 744.00
@@ -22,26 +32,24 @@ describe.skip('Income: Student Employment', function() {
 
         cases.forEach(({monthVar, expectedTotal}) => {
             monthVar.forEach(month => {
-                let total = studentEmployment(month, sessionHourlyWage, sessionHoursPerWeek, incomeTax);
+                let total = studentEmployment.getTotalForMonth(month, sessionHourlyWage, sessionHoursPerWeek, incomeTax);
                 expect(total).to.equal(expectedTotal);
             });
         });
     });
 
-    it('Return total earnings for a period (start_date, end_date)', function() {
-        let periods = [{
-            start: new Date('august 21, 2022'),
-            end: new Date('aug 27, 2022'),
-            expectedTotal: 336.00 // 1 week during break - income_tax
-        }, {
-            start: new Date('sep 4, 2022'),
-            end: new Date('oct 1, 2022'),
-            expectedTotal: 672.00 // 4 weeks in session - income_tax
-        }]
+    it('Return total earnings for entire budgetting period', function() {
+        window.today =() => new Date('jul 24, 2022');
+        store.get = (name) => {
+            return (name == 'budgetPeriod') ? { session: "21/22", semesters: ['fall', 'spring']} :
+                (name == 'sessionHourlyWage') ? 15:
+                (name == 'sessionHoursPerWeek') ? 15:
+                (name == 'incomeTax') ? 30:
+                (name == 'holidayWork') ? {'summer.22': {hoursPerWeek:40, weeks:85, wage:12}}:
+                null
+        }
 
-        periods.forEach(({start, end, expectedTotal}) => {
-            let total = studentEmployment({start, end}, sessionHourlyWage, sessionHoursPerWeek, incomeTax);
-            expect(total).to.equal(expectedTotal);
-        });
+        let total = studentEmployment.getTotal(sessionHourlyWage, sessionHoursPerWeek, incomeTax);
+        expect(total).to.equal(488);
     });
 });

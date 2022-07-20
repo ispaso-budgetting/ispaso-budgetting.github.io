@@ -2,7 +2,7 @@ import luxon from "../luxon.min.js";
 import { finAid } from '../income/index.js';
 import insurance from './insurance.js';
 import tuition from './tuition.js';
-import store from '../store/index.js';
+import store from 'store';
 import roomBoard from './roomBoard.js';
 import miscPrin from './miscPrin.js';
 import tax from './tax.js';

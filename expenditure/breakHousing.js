@@ -16,7 +16,6 @@ import { BREAK_HOUSING_COST_PER_NIGHT as COST_PER_NIGHT } from '/data/costs.js';
 export function getAllBreakHousing() {
     let budgetPeriod = store.get('budgetPeriod'); // current budget period.
     const savedBreakHousing = store.get('breakHousing');
-    console.log('saved break housing:', savedBreakHousing);
 
     let sessionInfo = sessions[budgetPeriod.session];
     const storedSemesters = budgetPeriod.semesters;
@@ -59,6 +58,12 @@ export function getAllBreakHousing() {
     }
 
     return result;
+}
+
+function getTotal() {
+    return Object.values(
+        getAllBreakHousing()
+    ).reduce((t, item) => t + item.budgetAmount, 0);
 }
 
 export function getForMonth(month, year) {
@@ -109,6 +114,9 @@ export function getForMonth(month, year) {
     return result;
 }
 
+function getCostForMonth() {
+}
+
 export function setBreakHousing(data) {
     const toSave = {};
 
@@ -116,4 +124,13 @@ export function setBreakHousing(data) {
         toSave[key] = (!isNaN(data[key].nights)) ? data[key].nights : 0;
     }
     store.save('breakHousing', toSave);
+}
+
+export default {
+    getAllBreakHousing,
+    getForMonth,
+    setBreakHousing,
+    getCostForAll: getTotal,
+    getTotal,
+    getCostForMonth
 }

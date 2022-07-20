@@ -1,5 +1,9 @@
-import store from '../store/index.js';
+import store from 'store';
 
-export default function() {
-    return store.retrieve('finAid');
+function getTotal() {
+    return store.get('finAid');
+}
+
+export default {
+    getTotal
 }

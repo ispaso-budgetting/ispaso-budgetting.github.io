@@ -1,3 +1,4 @@
+import storeStub from '../stubs/store.js';
 import otherSources from '../../income/extraIncome.js'
 
 describe('Income: Custom income', function() {
@@ -8,7 +9,12 @@ describe('Income: Custom income', function() {
             {name: 'Awards', date: new Date(), amount: null},
         ]
 
-        let ans = otherSources(extraIncome);
+        storeStub.get = (name) => {
+            return (name == 'budgetPeriod') ?  { session: "22/23", semesters: ['fall', 'spring']} :
+                name == 'extraIncome' ? extraIncome : null
+        };
+
+        let ans = otherSources.getTotal(extraIncome);
 
         expect(ans).to.equal(2000);
     });
@@ -20,50 +26,38 @@ describe('Income: Custom income', function() {
             {name: 'Awards', date: new Date(), amount: 1286},
         ]
 
-        let ans = otherSources(extraIncome);
+        storeStub.get = (name) => {
+            return (name == 'budgetPeriod') ?  { session: "22/23", semesters: ['fall', 'spring']} :
+                name == 'extraIncome' ? extraIncome : null
+        };
+
+        let ans = otherSources.getTotal(extraIncome);
 
         expect(ans).to.equal(5286);
     });
 
-    it('extraIncome: return total income for a defined period', function() {
-        let extraIncome = [
-            {name: 'Family', date: new Date('july 2 2022'), amount: 2000},
-            {name: 'Stipends', date: new Date('dec 23 2022'), amount: 1100},
-            {name: 'Awards', date: new Date('jun 1 2022'), amount: 520},
-            {name: 'Awards', date: new Date('jun 30 2022'), amount: 520},
-            {name: 'Awards', date: new Date('aug 1 2022'), amount: 2310},
-            {name: 'Awards', date: new Date('july 3 2023'), amount: 1000},
-            {name: 'Awards', date: new Date('july 25 2023'), amount: 1200},
-        ]
-
-        let cases = [
-            {period: {start: new Date('jun 1, 2022'), end: new Date('may 15, 2023')},
-                expectedIncome: 6450
-            }
-        ]
-
-        cases.forEach(({period, expectedIncome}) => {
-            expect(otherSources(extraIncome, period)).to.equal(expectedIncome);
-        });
-    });
-
     it('extraIncome: return total income for month', function() {
         let extraIncome = [
-            {name: 'Family', date: new Date('july 2'), amount: 2000},
-            {name: 'Stipends', date: new Date('dec 23'), amount: 1100},
-            {name: 'Awards', date: new Date('jun 1'), amount: 520},
-            {name: 'Awards', date: new Date('jun 30'), amount: 520},
-            {name: 'Awards', date: new Date('aug 1'), amount: 2310},
-            {name: 'Awards', date: new Date('july 3'), amount: 1000},
-            {name: 'Awards', date: new Date('july 25'), amount: 1200},
+            {name: 'Family', date: new Date('july 2, 2022'), amount: 2000},
+            {name: 'Stipends', date: new Date('dec 23, 2022'), amount: 1100},
+            {name: 'Awards', date: new Date('jun 1, 2022'), amount: 520},
+            {name: 'Awards', date: new Date('jun 30, 2022'), amount: 520},
+            {name: 'Awards', date: new Date('aug 1, 2022'), amount: 2310},
+            {name: 'Awards', date: new Date('july 3, 2022'), amount: 1000},
+            {name: 'Awards', date: new Date('july 25, 2022'), amount: 1200},
         ]
 
-        let jun = otherSources(extraIncome, 'jun');
-        let june = otherSources(extraIncome, 'june');
-        let july = otherSources(extraIncome, 'july');
-        let aug = otherSources(extraIncome, 'aug');
-        let august = otherSources(extraIncome, 'august');
-        let dec = otherSources(extraIncome, 'dec');
+        storeStub.get = (name) => {
+            return (name == 'budgetPeriod') ?  { session: "22/23", semesters: ['fall', 'spring']} :
+                name == 'extraIncome' ? extraIncome : null
+        };
+
+        let jun = otherSources.getTotalForMonth('jun', 2022);
+        let june = otherSources.getTotalForMonth('june', 2022);
+        let july = otherSources.getTotalForMonth('july', 2022);
+        let aug = otherSources.getTotalForMonth('aug', 2022);
+        let august = otherSources.getTotalForMonth('august', 2022);
+        let dec = otherSources.getTotalForMonth('dec', 2022);
 
         expect(jun).to.equal(1040);
         expect(june).to.equal(1040);

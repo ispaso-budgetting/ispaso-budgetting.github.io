@@ -31,30 +31,6 @@ getters.breakWorkHours = (state) => state.weeklyHours.breaks;
 getters.sessionWorkHours = (state) => parseFloat(state.sessionHoursPerWeek);
 getters.hourlyWage = (state) => parseFloat(state.hourlyWage);
 
-mutations.holidayWorkHours = function(state, payload) {
-    const h = state.holidays.work[payload.key];
-    if(h)
-        h.hoursPerWeek = payload.value;
-    else {
-        state.holidays.work[payload.key] = {
-            hoursPerWeek: payload.value
-        }
-    }
-}
-
-mutations.holidayWorkWeeksAvailable = function(state, payload) {
-    const h = state.holidays.work[payload.key];
-    if(h)
-        h.weeksAvailable = payload.value;
-    else {
-        state.holidays.work[payload.key] = {
-            weeksAvailable: payload.value
-        }
-    }
-}
-
-mutations.breakWorkHours = (state, payload) => (payload) ? state.weeklyHours.breaks = payload : 40;
-
 mutations.sessionWorkHours = (state, payload) =>  state.sessionHoursPerWeek;
 
 mutations.weeklyHours = (state, payload) => {

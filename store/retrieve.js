@@ -23,26 +23,6 @@ export function retrieve(key) {
 
     const end = endSemesterDate();
     switch(key) {
-        case 'holidayWork':
-        case 'holidayHours':
-            let defaultHolidays = defaultHolidayWork(today(), end);
-
-            value = {};
-
-            const userDefinedHolidays = {...vuexStore.getters.holidays.work};
-
-            for(let h in defaultHolidays) {
-                const uh = userDefinedHolidays[h];
-                value[h] = defaultHolidays[h];
-                if(uh) {
-                    value[h] = {
-                        ...value[h],
-                        ...uh
-                    }
-                }
-            }
-            break;
-
         case 'academicSession':
             value = academicSession();
             break;

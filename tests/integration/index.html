@@ -13,6 +13,17 @@
 
     <div id="mocha"></div>
 
+    <script type='importmap'>
+      {
+        "imports": {
+          "store": "../stubs/store.js",
+          "expenditure/": "/expenditure/",
+          "income/": "/income/",
+          "budget/": "/budget/"
+        }
+      }
+    </script>
+
     <script src="/tests/dependencies/chai.js"></script>
     <script src="/tests/dependencies/mocha.js"></script>
     <script> var { expect } = chai; </script>

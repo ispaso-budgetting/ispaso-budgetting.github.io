@@ -9,10 +9,28 @@
 <body>
   <div id='app'>
     <div>
-    <h1>Suggested Prinbill Payment Plan</h1>
-    <p><b>DISCLAIMER:</b> This is for planning purposes only based on your estimated Prinbill. Please refer to your Prinbill account for exact Prinbill balances.
-    </p>
+      <h1>Suggested Prinbill Payment Plan</h1>
+      <p><b>DISCLAIMER:</b> This is for planning purposes only based on your estimated Prinbill. Please refer to your Prinbill account for exact Prinbill balances.
+      <table>
+        <thead>
+          <tr>
+            <th>Month</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{ prinbillTable }}
+          <!-- <tr v-for='data in budget'> -->
+          <tr v-for='data in prinbillTable'>
+            <td>{{ data.month }}</td>
+            <td>{{ data.amount }}</td>
+          </tr>
+        </tbody>
+      </table>
+      </p>
+
     </div>
+
     <h1>Budget for {{ budgetTitle }}</h1>
     <table>
       <thead>
@@ -47,9 +65,20 @@
     </table>
   </div>
 
+  <script type='importmap'>
+    {
+        "imports": {
+          "store": "./store/index.js",
+          "expenditure/": "./expenditure/",
+          "income/": "./income/"
+        }
+      }
+  </script>
+
   <script type='module'>
     import store from './store/index.js';
-        import { budgetTitle, calculateBudget, totalBudget, monthlyBudget } from './budget/index.js';
+        // import { budgetTitle, calculateBudget, totalBudget, monthlyBudget } from './budget/index.js';
+        import * as prinbill from '/budget/prinbill.js';
 
         const app = Vue.createApp({
             data() {
@@ -57,16 +86,20 @@
                     income: [],
                     expenditure: [],
                     budgetData: [],
-                    budgetTitle,
-                    totalBudget,
+                    budgetTitle: "Budget",
+                    totalBudget: 14,
+                    prinbillTable: []
                 }
             },
 
             mounted() {
-                calculateBudget();
+              this.prinbillPaymentPlan = prinbill.getPaymentPlan();
+                // calculateBudget();
+                /*
                 this.budgetData = monthlyBudget;
 
                 this.budgetTitle = budgetTitle;
+                */
 
                 // income.push({name: 'Financial Aid', amount: store.getters.finAid});
                 // console.log('monthlyExpenditure:', monthlyExpenditure());
