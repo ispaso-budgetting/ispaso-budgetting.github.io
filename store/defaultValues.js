@@ -35,9 +35,6 @@ export default function() {
 
         breakHousing: {},
 
-        budgetPeriod: {
-            session: "22/23",
-            semesters: ['fall', 'spring']
-        },
+        budgetPeriod: { },
     }
 }

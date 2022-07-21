@@ -5,6 +5,18 @@ describe('Prinbill payment plan', function() {
     it('GetPaymentPlan: return payment plan', function() {
         window.today = () => new Date('jan 2022');
 
+        const pp = getPaymentPlan();
+
+        expect(pp).to.have.lengthOf(18);
+        pp.forEach(item => {
+            expect(item).to.have.property('month').that.is.a('string');
+            expect(item).to.have.property('amount').that.is.a('number');
+            expect(item.amount).to.not.equal(0, item.month + ' has payment of 0');
+        });
+    });
+    it('GetPaymentPlan (Stubbed): return payment plan', function() {
+        window.today = () => new Date('jan 2022');
+
         storeStub.get = (name) => {
             return (name == 'budgetPeriod') ? { session: "22/23", semesters: ['fall', 'spring']} :
                 (name == 'breakHousing') ? {'sb.22': 23, 'winter.22': 12} :

@@ -20,6 +20,11 @@
           "expenditure/": "/expenditure/",
           "income/": "/income/",
           "budget/": "/budget/"
+        },
+        "scopes": {
+          "./budgetPeriod.test.js": {
+            "store": "/store/index.js"
+          }
         }
       }
     </script>
@@ -28,8 +33,14 @@
     <script src="/tests/dependencies/mocha.js"></script>
     <script> var { expect } = chai; </script>
 
+    <script type='module' src='./_rootHooks.js'></script>
     <script type='module' class="mocha-init">
-      mocha.setup('bdd');
+      mocha.setup({
+        ui:'bdd',
+        rootHooks,
+        checkLeaks: true,
+      });
+      mocha.checkLeaks();
     </script>
     <script type='module' src="index.js"></script>
     <script type='module' src="run.js"></script>

@@ -23,10 +23,6 @@ export function retrieve(key) {
 
     const end = endSemesterDate();
     switch(key) {
-        case 'academicSession':
-            value = academicSession();
-            break;
-
         case 'semesters':
         case 'semesterArr':
             value = vuexStore.getters.semesters;
@@ -48,6 +44,7 @@ export function retrieve(key) {
         default:
             const defaults = defaultValues();
             value = vuexStore.getters[key];
+            console.log('getting budget period:', value);
             if(value == null)
                 value = defaults[key];
             break;

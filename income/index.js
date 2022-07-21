@@ -7,7 +7,7 @@ import store from '../store/index.js';
 // Free income is income that the student can choose how, where and when to spend it.
 // It is important to make this decision because we don't want to imply to students that they have more cash to spend than they do.
 
-export let frozenIncome = finAid();
+export let frozenIncome = finAid.getTotal();
 export let freeIncome;
 
 export default function(start, end) {

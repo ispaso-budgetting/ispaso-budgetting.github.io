@@ -3,7 +3,7 @@ import * as budgetPeriod from '/budget/budgetPeriod.js';
 import luxon from '/dependencies/luxon.min.js';
 
 function getTotal() {
-    let monthlyPremium = 62;
+    let monthlyPremium = 73;
 
     let start = today();
     const end = budgetPeriod.getEndDate();

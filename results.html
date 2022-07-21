@@ -19,7 +19,6 @@
           </tr>
         </thead>
         <tbody>
-          {{ prinbillTable }}
           <!-- <tr v-for='data in budget'> -->
           <tr v-for='data in prinbillTable'>
             <td>{{ data.month }}</td>
@@ -77,41 +76,44 @@
 
   <script type='module'>
     import store from './store/index.js';
-        // import { budgetTitle, calculateBudget, totalBudget, monthlyBudget } from './budget/index.js';
-        import * as prinbill from '/budget/prinbill.js';
+    // import { budgetTitle, calculateBudget, totalBudget, monthlyBudget } from './budget/index.js';
+    import * as prinbill from '/budget/prinbill.js';
 
-        const app = Vue.createApp({
-            data() {
-                return {
-                    income: [],
-                    expenditure: [],
-                    budgetData: [],
-                    budgetTitle: "Budget",
-                    totalBudget: 14,
-                    prinbillTable: []
-                }
-            },
-
-            mounted() {
-              this.prinbillPaymentPlan = prinbill.getPaymentPlan();
-                // calculateBudget();
-                /*
-                this.budgetData = monthlyBudget;
-
-                this.budgetTitle = budgetTitle;
-                */
-
-                // income.push({name: 'Financial Aid', amount: store.getters.finAid});
-                // console.log('monthlyExpenditure:', monthlyExpenditure());
-
-                // expenditure.push({name: 'Graduation Date', amount: store.getters.gradDate});
-
-                // this.totalIncome = income.reduce((sum, data) => sum + parseInt(data.amount), 0);
+    const app = Vue.createApp({
+        data() {
+            return {
+                income: [],
+                expenditure: [],
+                budgetData: [],
+                budgetTitle: "Budget",
+                totalBudget: 14,
+                prinbillTable: []
             }
-        });
+        },
 
-        app.use(store);
-        app.mount('#app');
+        mounted() {
+        console.log('is mounting');
+          console.log('\n\n\n*************************\n', prinbill.getPaymentPlan());
+          // this.prinbillPaymentPlan = prinbill.getPaymentPlan();
+          this.prinbillTable = prinbill.getPaymentPlan();
+            // calculateBudget();
+            /*
+            this.budgetData = monthlyBudget;
+
+            this.budgetTitle = budgetTitle;
+            */
+
+            // income.push({name: 'Financial Aid', amount: store.getters.finAid});
+            // console.log('monthlyExpenditure:', monthlyExpenditure());
+
+            // expenditure.push({name: 'Graduation Date', amount: store.getters.gradDate});
+
+            // this.totalIncome = income.reduce((sum, data) => sum + parseInt(data.amount), 0);
+        }
+    });
+
+    app.use(store);
+    app.mount('#app');
   </script>
 </body>
 </html>

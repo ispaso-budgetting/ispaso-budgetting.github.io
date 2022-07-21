@@ -16,14 +16,14 @@
           <p>What academic periods are you budgeting for?</p>
           <div v-for = '(session, key) in academicSessions'>
             <label v-if='key=="22/23"'>
-              <input type='radio' :value='key' v-model='academicSession'
+              <input type='radio' :value='key' v-model='budgetPeriod.session'
                 @click='semesterArr = Object.keys(session).map(a => a)'/>
 
               20{{ key.substring(0,2) }} - 20{{ key.substring(3) }}
 
-              <div v-if='academicSession == key'>
+              <div v-if='budgetPeriod.session == key'>
                 <label v-for='(period, name) in session' style='padding-left: 2rem'>
-                  <input type='checkbox' :value='name' v-model='semesterArr' />
+                  <input type='checkbox' :value='name' v-model='budgetPeriod.semesters' />
                   {{ period.name }}
                 </label>
               </div>
@@ -55,7 +55,7 @@
               <span class='input-group__label'>
                 How many weeks will you be working on campus during {{ sem.name }}
               </span>
-              <input class='input-group__control' type='number' placeholder='12.5' step='0.1' v-model='sem.hoursPerWeek' />
+              <input class='input-group__control' type='number' placeholder='12.5' step='0.1' v-model='sem.weeksAvailable' />
             </label>
 
             <label>
@@ -188,10 +188,12 @@
         import { sessions as academicSessions } from '/utils/semesters.js';
         import { formatTime } from '/utils/index.js';
         import { getAllBreakHousing, setBreakHousing } from '/expenditure/breakHousing.js';
+        import { setBudgetPeriod, getBudgetPeriod } from '/budget/budgetPeriod.js';
 
         const app = Vue.createApp({
             data() {
                 return {
+                budgetPeriod: {},
                     academicSessions,
                     academicSession: null,
                     semesters: {},
@@ -258,12 +260,10 @@
                   sessionHours, breakHours, 
                   hourlyWage, incomeTax,
                   birthdate, extraExpenditure, extraIncome,
-                  academicSession, semesters,
                   breakHousing,
+                  budgetPeriod,
                   usePrinInsurance, customInsurance,
                 } = this;
-
-                setBreakHousing(breakHousing);
 
                 store.save({
                   birthdate,
@@ -271,9 +271,11 @@
                   gradDate, finAid, ageBracket,
                   sessionHoursPerWeek: sessionHours,
                   hourlyWage, incomeTax,
-                  academicSession, semesters,
                   usePrinInsurance, customInsurance,
                 });
+
+                setBreakHousing(breakHousing);
+                setBudgetPeriod(budgetPeriod);
 
                 if(this.noDOB)
                     store.save('birthdate', null);
@@ -289,6 +291,8 @@
 
             mounted() {
               this.fetchHolidaysFromStore();
+              console.log('budget period:', getBudgetPeriod());
+              this.budgetPeriod = getBudgetPeriod();
 
               this.customInsurance = store.get("customInsurance");
               this.usePrinInsurance = store.get("usePrinInsurance");

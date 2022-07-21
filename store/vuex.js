@@ -39,9 +39,6 @@ mutations.weeklyHours = (state, payload) => {
 
 mutations.hourlyWage = (state, payload) => (payload) ? state.hourlyWage = payload : null;
 
-// BUDGETING
-mutations.budgetPeriod = (state, payload) => state.budgetPeriod = payload;
-
 const store = Vuex.createStore({
     state() {
         return getDefaultValues()

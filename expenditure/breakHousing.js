@@ -6,6 +6,7 @@ import store from 'store';
 import holidays from '/data/holidays.js';
 import { sessions } from '/data/sessions.js';
 import { BREAK_HOUSING_COST_PER_NIGHT as COST_PER_NIGHT } from '/data/costs.js';
+import { getEndDate } from '/budget/budgetPeriod.js';
 
 /**
  * Returns the holidays contained in the current budget period
@@ -14,15 +15,10 @@ import { BREAK_HOUSING_COST_PER_NIGHT as COST_PER_NIGHT } from '/data/costs.js';
  * to max number of nights contained in holiday
  */
 export function getAllBreakHousing() {
-    let budgetPeriod = store.get('budgetPeriod'); // current budget period.
     const savedBreakHousing = store.get('breakHousing');
 
-    let sessionInfo = sessions[budgetPeriod.session];
-    const storedSemesters = budgetPeriod.semesters;
-    const endSemesterName = storedSemesters.includes('spring') ? 'spring' : 'fall';
-
     let start = today();
-    let end = new Date(sessionInfo[endSemesterName].end);
+    let end = getEndDate();
 
     start = luxon.DateTime.fromISO(start.toISOString());
     end = luxon.DateTime.fromISO(end.toISOString()).endOf('day');
@@ -70,12 +66,7 @@ export function getForMonth(month, year) {
     let start = luxon.DateTime.fromJSDate(new Date(month + ' ' + year));
     let end = start.endOf('month');
 
-    let budgetPeriod = store.get('budgetPeriod'); // current budget period.
     const savedBreakHousing = store.get('breakHousing');
-
-    let sessionInfo = sessions[budgetPeriod.session];
-    const storedSemesters = budgetPeriod.semesters;
-    const endSemesterName = storedSemesters.includes('spring') ? 'spring' : 'fall';
 
     const periodInterval = luxon.Interval.fromDateTimes(start, end);
     const result = {nights: 0, budgetAmount: 0};
